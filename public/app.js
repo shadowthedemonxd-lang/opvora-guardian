@@ -131,7 +131,7 @@ function render() {
   feedEl.replaceChildren(...state.items.map((item) => {
     const sev = item.result?.severity;
     return h('li', {}, h('button', {
-      type: 'button', class: `event${item.resolved ? ' is-resolved' : ''}`, 'aria-current': String(state.selected === item.id),
+      type: 'button', class: `event${item.resolved ? ' is-resolved' : ''}`, 'aria-current': String(state.selected === item.id), 'data-sev': item.resolved ? null : sev,
       onclick: () => select(item.id),
     },
     h('span', { class: 'event__icon' }, icon(AREA_ICON[item.ev.area])),
@@ -150,7 +150,7 @@ function select(id) {
   if (!item) return;
   if (item.status === 'pending') return thinking(detailEl, `AI analyst reading "${item.ev.title}"…`);
   if (item.status === 'error') {
-    return detailEl.replaceChildren(h('div', { class: 'empty' }, icon('i-shield'), h('p', {}, item.error),
+    return detailEl.replaceChildren(h('div', { class: 'empty' }, h('p', { class: 'empty__title' }, 'Analysis failed'), h('p', {}, item.error),
       h('button', { class: 'btn', type: 'button', onclick: () => { item.status = 'pending'; state.queue.push(item); pump(); render(); select(item.id); } }, 'Retry analysis')));
   }
   const r = item.result;
@@ -194,7 +194,7 @@ function reset() {
   setRunning(false);
   Object.assign(state, { items: [], next: 0, selected: null, queue: [] });
   render();
-  detailEl.replaceChildren(h('div', { class: 'empty' }, icon('i-spark'), h('p', {}, 'Select an event to read the AI\'s analysis.')));
+  detailEl.replaceChildren(h('div', { class: 'empty' }, h('p', { class: 'empty__title' }, 'Nothing selected'), h('p', {}, 'Pick an alert from the log to read the AI\'s verdict, the red flags it found and the steps to take.')));
   setRunning(false);
 }
 resetBtn.addEventListener('click', reset);
@@ -238,7 +238,7 @@ scanForm.addEventListener('submit', async (e) => {
     lastScan = { content: content.slice(0, 600), r };
     renderAnalysis(scanOut, r, { meta: r.kind === 'url' ? 'Link' : 'Message', ask: `I scanned this ${r.kind === 'url' ? 'link' : 'message'} and you rated it ${SEV_LABEL[r.severity]}. What exactly should I do now?` });
   } catch (err) {
-    scanOut.replaceChildren(h('div', { class: 'empty' }, icon('i-shield'), h('p', {}, err.message)));
+    scanOut.replaceChildren(h('div', { class: 'empty' }, h('p', { class: 'empty__title' }, 'Analysis failed'), h('p', {}, err.message)));
   } finally {
     scanBtn.disabled = false;
   }
