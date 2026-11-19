@@ -1,4 +1,4 @@
-# OPVORA · Your AI Digital Guardian
+﻿# OPVORA Â· Your AI Digital Guardian
 
 An AI security analyst for your **browsing**, your **PC** and your **connected accounts**. It reads security events like an analyst would, explains the risk in plain language and tells you what to do next. There's also a small assistant you can talk to.
 
@@ -49,5 +49,11 @@ npm run deploy
 
 ## Showcase video
 
-[video/opvora-showcase.mp4](video/opvora-showcase.mp4): 96 seconds, recorded against the live site. Every AI result in it is a real model response.
+[video/opvora-showcase.mp4](video/opvora-showcase.mp4): 93 seconds, recorded against the live site (includes the coercive-threat detection). Every AI result in it is a real model response.
+
+
+
+## Detection regression check
+
+`node scripts/eval.mjs https://opvora-guardian.pages.dev` runs 14 real-model cases (threats and coercion in English and Spanish, sextortion, phishing, profanity, benign requests). Last run: 14/14.
 
