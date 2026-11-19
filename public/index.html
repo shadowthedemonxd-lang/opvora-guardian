@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OPVORA · Your AI Digital Guardian</title>
-  <meta name="description" content="OPVORA is an AI security analyst for your browsing, your PC and your connected accounts. It explains every threat in plain language and tells you what to do next.">
-  <meta name="theme-color" content="#070A12">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>OPVORA</title>
+  <meta name="description" content="OPVORA reads security alerts from your browser, your PC and your accounts like an analyst would, then tells you how serious each one is and what to do first.">
+  <meta name="theme-color" content="#F2F4F3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0C1315" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,500..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <script type="module" src="/app.js"></script>
 </head>
@@ -28,202 +29,220 @@
     <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5c.5 4.6 2.9 7 9.5 9.5-6.6 2.5-9 4.9-9.5 9.5-.5-4.6-2.9-7-9.5-9.5 6.6-2.5 9-4.9 9.5-9.5Z"/></symbol>
     <symbol id="i-link" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></g></symbol>
     <symbol id="i-msg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 5h16v11H9l-5 4V5Z"/></symbol>
-    <symbol id="i-logo" viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" d="M24 5.5 39.5 11v11.6c0 9.4-6.4 16-15.5 19.4C14.9 38.6 8.5 32 8.5 22.6V11L24 5.5Z"/><circle cx="24" cy="22.5" r="7.2" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-dasharray="36 9.3" transform="rotate(-50 24 22.5)"/><circle cx="24" cy="22.5" r="2.3" fill="var(--accent)"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-logo" viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round" d="M24 5.5 39.5 11v11.6c0 9.4-6.4 16-15.5 19.4C14.9 38.6 8.5 32 8.5 22.6V11L24 5.5Z"/><circle cx="24" cy="22.5" r="7.2" fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="36 9.3" transform="rotate(-50 24 22.5)"/><circle cx="24" cy="22.5" r="2.4" fill="var(--accent)"/></symbol>
   </svg>
 
   <a class="skip" href="#console">Skip to the console</a>
 
-  <header class="nav" id="top">
-    <a class="brand" href="#top" aria-label="OPVORA home">
-      <svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg>
-      <span class="brand__word">OPVORA</span>
-    </a>
-    <nav class="nav__links" aria-label="Sections">
-      <a href="#console">Console</a>
-      <a href="#scanner">Scanner</a>
-      <a href="#how">How it works</a>
-    </nav>
-    <span class="pill pill--live"><span class="dot"></span>AI online</span>
+  <header class="nav">
+    <div class="wrap nav__inner">
+      <a class="brand" href="#top" aria-label="OPVORA, back to top">
+        <svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg>
+        <span class="brand__word">OPVORA</span>
+      </a>
+      <nav class="nav__links" aria-label="Sections">
+        <a href="#console">Console</a>
+        <a href="#scanner">Scanner</a>
+        <a href="#coverage">Coverage</a>
+        <a href="#method">Method</a>
+      </nav>
+      <span class="status pill--live" role="status"><span class="dot" aria-hidden="true"></span>AI online</span>
+    </div>
   </header>
 
-  <main>
-    <section class="hero">
+  <main id="top">
+    <section class="hero wrap">
       <div class="hero__copy">
-        <p class="eyebrow reveal">AI digital guardian · 24/7</p>
-        <h1 class="reveal">A guardian that <span class="grad">never sleeps.</span></h1>
-        <p class="lede reveal">OPVORA watches your browsing, your PC and your connected accounts. It reads every alert like a security analyst, explains the risk in plain words and tells you exactly what to do next.</p>
-        <div class="hero__cta reveal">
-          <a class="btn btn--primary" href="#console" data-start-demo><svg aria-hidden="true"><use href="#i-play"/></svg>Start the live demo</a>
-          <a class="btn btn--ghost" href="#scanner"><svg aria-hidden="true"><use href="#i-link"/></svg>Scan a link or message</a>
+        <p class="kicker">AI digital guardian for browsing, PC and accounts</p>
+        <h1>Security alerts, explained in plain words.</h1>
+        <p class="lede">OPVORA reads alerts the way a security analyst would. It tells you how serious each one is, why, and what to do first, whether it came from your browser, your computer or one of your accounts.</p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#console" data-start-demo><svg aria-hidden="true"><use href="#i-play"/></svg>Run the live demo</a>
+          <a class="btn btn--line" href="#scanner">Check a link or message<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
-        <p class="honest reveal"><svg aria-hidden="true"><use href="#i-spark"/></svg>Demo build. The AI analysis is real. PC and account events are simulated samples; OPVORA is not connected to your device or accounts.</p>
+        <dl class="facts">
+          <div><dt>Analyst model</dt><dd>Llama 3.3 70B</dd></div>
+          <div><dt>Rule checks</dt><dd>29 patterns</dd></div>
+          <div><dt>Typical verdict</dt><dd>5–8 s</dd></div>
+          <div><dt>Your text stored</dt><dd>Never</dd></div>
+        </dl>
       </div>
 
-      <div class="radar reveal" aria-hidden="true">
-        <div class="radar__rings"></div>
-        <div class="radar__sweep"></div>
-        <span class="blip" style="--x:68%;--y:28%;--d:0s"></span>
-        <span class="blip blip--hot" style="--x:30%;--y:64%;--d:1.4s"></span>
-        <span class="blip" style="--x:74%;--y:70%;--d:2.6s"></span>
-        <span class="blip" style="--x:22%;--y:30%;--d:3.3s"></span>
-        <div class="radar__core"><svg><use href="#i-logo"/></svg></div>
-        <span class="orbit orbit--a"><svg><use href="#i-globe"/></svg>Browsing</span>
-        <span class="orbit orbit--b"><svg><use href="#i-device"/></svg>PC security</span>
-        <span class="orbit orbit--c"><svg><use href="#i-accounts"/></svg>Accounts</span>
-      </div>
-    </section>
-
-    <section class="pillars">
-      <header class="section-head reveal">
-        <p class="eyebrow">Coverage</p>
-        <h2>Three fronts. One analyst.</h2>
-      </header>
-      <div class="pillars__grid">
-        <article class="pillar reveal">
-          <div class="pillar__icon"><svg aria-hidden="true"><use href="#i-globe"/></svg></div>
-          <h3>Browsing</h3>
-          <p>Look-alike bank pages, fake downloads, link tricks and extensions that ask for far too much.</p>
-          <span class="tag tag--live">Live · scanner works today</span>
-        </article>
-        <article class="pillar reveal">
-          <div class="pillar__icon"><svg aria-hidden="true"><use href="#i-device"/></svg></div>
-          <h3>PC security</h3>
-          <p>Hidden scripts, ransomware behavior, programs that sneak into startup and defenses switched off.</p>
-          <span class="tag tag--sim">Simulated feed in this demo</span>
-        </article>
-        <article class="pillar reveal">
-          <div class="pillar__icon"><svg aria-hidden="true"><use href="#i-accounts"/></svg></div>
-          <h3>Connected accounts</h3>
-          <p>Sign-ins from strange places, silent forwarding rules, brute-force attempts and apps with full access.</p>
-          <span class="tag tag--sim">Simulated feed in this demo</span>
-        </article>
-      </div>
+      <figure class="ticket" aria-label="Sample verdict produced by OPVORA">
+        <figcaption class="ticket__cap"><span>Sample verdict</span><span class="mono">OPV-0142 · message scan</span></figcaption>
+        <div class="ticket__body" data-sev="critical">
+          <div class="ticket__head">
+            <span class="sev" data-sev="critical">Critical</span>
+            <span class="ticket__score mono">95 / 100</span>
+          </div>
+          <h2 class="ticket__title">Coercive Threat and ID Theft</h2>
+          <blockquote class="ticket__quote">“I know where you live. Send me your home address and a photo of your ID by tonight or you will regret it.”</blockquote>
+          <div class="ticket__cols">
+            <div>
+              <h3>Red flags</h3>
+              <ul class="ticket__flags">
+                <li>Threat of harm</li>
+                <li>Demands home address and ID</li>
+                <li>Hard deadline: tonight</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Do first</h3>
+              <ol class="ticket__steps">
+                <li>Do not reply or send anything</li>
+                <li>Save the message as evidence</li>
+                <li>Block, report, tell someone you trust</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <p class="ticket__foot mono">Condensed from a real verdict in our test set · Llama 3.3 70B</p>
+      </figure>
     </section>
 
     <section class="console" id="console" aria-labelledby="console-title">
-      <header class="section-head section-head--row reveal">
-        <div>
-          <p class="eyebrow">Guardian console</p>
-          <h2 id="console-title">Watch the AI work through a live incident.</h2>
-        </div>
-        <div class="controls">
-          <button class="btn btn--primary" id="sim-toggle" type="button"><svg aria-hidden="true"><use href="#i-play"/></svg><span>Start simulation</span></button>
-          <button class="btn btn--icon" id="sim-reset" type="button" aria-label="Reset the simulation"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
-        </div>
-      </header>
-
-      <div class="banner reveal" role="note">
-        <span class="tag tag--sim">Simulated monitoring</span>
-        <p>The events below are <strong>sample data</strong> played back as a scripted incident. Each one is sent, as raw text, to the <strong>real AI analyst</strong>, which decides severity and next steps on its own.</p>
-      </div>
-
-      <div class="board reveal">
-        <div class="card score">
-          <svg class="score__ring" viewBox="0 0 120 120" aria-hidden="true">
-            <circle cx="60" cy="60" r="52" class="score__track"/>
-            <circle cx="60" cy="60" r="52" class="score__bar" id="score-bar"/>
-          </svg>
-          <div class="score__value"><span id="score-num">100</span><small>Guardian score</small></div>
-          <p class="score__state" id="score-state">All clear</p>
-        </div>
-
-        <div class="areas" id="areas">
-          <div class="card area" data-area="browsing"><svg aria-hidden="true"><use href="#i-globe"/></svg><div><h3>Browsing</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
-          <div class="card area" data-area="device"><svg aria-hidden="true"><use href="#i-device"/></svg><div><h3>PC security</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
-          <div class="card area" data-area="accounts"><svg aria-hidden="true"><use href="#i-accounts"/></svg><div><h3>Accounts</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
-        </div>
-
-        <div class="card feed">
-          <div class="card__head"><h3>Event stream</h3><span class="mono muted" id="feed-meta">Idle</span></div>
-          <ol class="feed__list" id="feed" aria-live="polite"></ol>
-          <div class="empty" id="feed-empty">
-            <svg aria-hidden="true"><use href="#i-shield"/></svg>
-            <p>Press <strong>Start simulation</strong> to stream sample events into the analyst.</p>
+      <div class="wrap">
+        <header class="head">
+          <div class="head__text">
+            <h2 id="console-title">Guardian console</h2>
+            <p>Twelve alerts from a staged account takeover play back in order. Each one goes to the AI analyst as raw text, and it decides the severity on its own.</p>
           </div>
-        </div>
+          <div class="controls">
+            <button class="btn btn--primary" id="sim-toggle" type="button"><svg aria-hidden="true"><use href="#i-play"/></svg><span>Start simulation</span></button>
+            <button class="btn btn--line btn--icon" id="sim-reset" type="button" aria-label="Reset the simulation" title="Reset"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
+          </div>
+        </header>
 
-        <div class="card detail" id="detail" aria-live="polite">
-          <div class="empty">
-            <svg aria-hidden="true"><use href="#i-spark"/></svg>
-            <p>Select an event to read the AI's analysis.</p>
+        <div class="desk">
+          <p class="desk__notice"><span class="tag tag--sim">Simulated feed</span>These alerts are sample data. OPVORA is not connected to your device or accounts. The analysis of each alert is real.</p>
+
+          <div class="desk__status">
+            <div class="score">
+              <svg class="score__ring" viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="60" cy="60" r="52" class="score__track"/>
+                <circle cx="60" cy="60" r="52" class="score__bar" id="score-bar"/>
+              </svg>
+              <div class="score__text">
+                <span class="score__num" id="score-num">100</span>
+                <span class="score__label">Guardian score</span>
+                <span class="score__state" id="score-state">All clear</span>
+              </div>
+            </div>
+            <div class="areas" id="areas">
+              <div class="area" data-area="browsing"><svg aria-hidden="true"><use href="#i-globe"/></svg><div><h3>Browsing</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
+              <div class="area" data-area="device"><svg aria-hidden="true"><use href="#i-device"/></svg><div><h3>PC security</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
+              <div class="area" data-area="accounts"><svg aria-hidden="true"><use href="#i-accounts"/></svg><div><h3>Accounts</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
+            </div>
+          </div>
+
+          <div class="desk__body">
+            <div class="feed">
+              <div class="feed__head"><h3>Alert log</h3><span class="mono" id="feed-meta">Idle</span></div>
+              <ol class="feed__list" id="feed" aria-live="polite"></ol>
+              <div class="empty">
+                <p class="empty__title">No alerts yet</p>
+                <p>Press <strong>Start simulation</strong> to stream the twelve sample alerts into the analyst.</p>
+              </div>
+            </div>
+            <div class="detail" id="detail" aria-live="polite">
+              <div class="empty">
+                <p class="empty__title">Nothing selected</p>
+                <p>Pick an alert from the log to read the AI's verdict, the red flags it found and the steps to take.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="scanner" id="scanner" aria-labelledby="scanner-title">
-      <header class="section-head reveal">
-        <p class="eyebrow">Live scanner · real analysis</p>
-        <h2 id="scanner-title">Paste it before you click it.</h2>
-        <p class="lede">Drop in a link, an email or a text message. A rule engine checks it first, then the AI analyst explains what is going on. Nothing you paste is stored by OPVORA. Never paste passwords.</p>
+    <section class="scanner wrap" id="scanner" aria-labelledby="scanner-title">
+      <header class="head">
+        <div class="head__text">
+          <h2 id="scanner-title">Check a link or message before you trust it</h2>
+          <p>Paste a web address, an email, an SMS or a chat message. The rule engine checks it first, then the AI analyst explains it. Nothing you paste is stored. Never paste passwords.</p>
+        </div>
+        <span class="tag tag--live">Live analysis</span>
       </header>
 
-      <div class="scan reveal">
-        <form class="card scan__form" id="scan-form">
-          <div class="tabs" role="tablist" aria-label="What are you scanning?">
+      <div class="scan">
+        <form class="scan__form" id="scan-form">
+          <div class="tabs" role="tablist" aria-label="What are you checking?">
             <button type="button" role="tab" class="tab" aria-selected="true" data-kind="url"><svg aria-hidden="true"><use href="#i-link"/></svg>Link</button>
             <button type="button" role="tab" class="tab" aria-selected="false" data-kind="message"><svg aria-hidden="true"><use href="#i-msg"/></svg>Message</button>
           </div>
           <label class="sr-only" for="scan-input">Link or message to analyze</label>
-          <textarea id="scan-input" rows="5" maxlength="4000" placeholder="https://example.com/login" required></textarea>
-          <div class="scan__row">
-            <div class="examples" id="examples" aria-label="Examples"></div>
-            <button class="btn btn--primary" type="submit" id="scan-btn"><svg aria-hidden="true"><use href="#i-spark"/></svg><span>Analyze</span></button>
+          <textarea id="scan-input" rows="6" maxlength="4000" placeholder="https://example.com/login" required></textarea>
+          <div class="scan__examples">
+            <span class="mono">Try an example</span>
+            <div class="examples" id="examples"></div>
           </div>
+          <button class="btn btn--primary btn--block" type="submit" id="scan-btn"><svg aria-hidden="true"><use href="#i-shield"/></svg><span>Analyze</span></button>
         </form>
-        <div class="card detail" id="scan-result" aria-live="polite">
+        <div class="detail detail--scan" id="scan-result" aria-live="polite">
           <div class="empty">
-            <svg aria-hidden="true"><use href="#i-shield"/></svg>
-            <p>Results appear here, with the rule-engine signals and the AI's verdict side by side.</p>
+            <p class="empty__title">Verdict appears here</p>
+            <p>You'll see the severity, the rule-engine hits and the AI's explanation side by side.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="how" id="how" aria-labelledby="how-title">
-      <header class="section-head reveal">
-        <p class="eyebrow">How it works</p>
-        <h2 id="how-title">Two layers of judgment, one clear answer.</h2>
+    <section class="coverage wrap" id="coverage" aria-labelledby="coverage-title">
+      <header class="head">
+        <div class="head__text">
+          <h2 id="coverage-title">What OPVORA covers</h2>
+          <p>Three areas where most personal attacks start. This demo is clear about which parts are live and which are simulated.</p>
+        </div>
       </header>
-      <ol class="steps">
-        <li class="reveal"><span class="mono">01</span><h3>Collect</h3><p>Events arrive from the browser, the PC and connected accounts. In this demo they are scripted samples.</p></li>
-        <li class="reveal"><span class="mono">02</span><h3>Rule engine</h3><p>Fast, deterministic checks catch known tricks: look-alike domains, raw IPs, encoded commands, mass file renames.</p></li>
-        <li class="reveal"><span class="mono">03</span><h3>AI analyst</h3><p>Llama 3.3 70B on Cloudflare Workers AI weighs the context, sets severity and writes the explanation.</p></li>
-        <li class="reveal"><span class="mono">04</span><h3>Explain and act</h3><p>You get a plain-language verdict, the red flags it saw and the steps to take, most urgent first.</p></li>
-      </ol>
-
-      <div class="truth reveal">
-        <div class="truth__col">
-          <h3><span class="tag tag--live">Real today</span></h3>
-          <ul>
-            <li>AI threat analysis of every event and every scan</li>
-            <li>Rule engine for links, messages and event logs</li>
-            <li>Link and message scanner</li>
-            <li>AI security assistant you can talk to</li>
-          </ul>
-        </div>
-        <div class="truth__col">
-          <h3><span class="tag tag--sim">Simulated in this demo</span></h3>
-          <ul>
-            <li>The PC and account event stream</li>
-            <li>The Guardian score (computed from those sample events)</li>
-          </ul>
-        </div>
-        <div class="truth__col">
-          <h3><span class="tag">Needed for real protection</span></h3>
-          <ul>
-            <li>A browser extension to see the pages you open</li>
-            <li>A Windows agent reading security logs</li>
-            <li>Read-only account connections you approve (OAuth)</li>
-          </ul>
-        </div>
+      <div class="table-wrap">
+        <table class="cover">
+          <thead><tr><th scope="col">Area</th><th scope="col">What it looks for</th><th scope="col">In this demo</th><th scope="col">Needed for real protection</th></tr></thead>
+          <tbody>
+            <tr>
+              <th scope="row"><svg aria-hidden="true"><use href="#i-globe"/></svg>Browsing</th>
+              <td>Look-alike bank pages, punycode domains, link shorteners, fake downloads, extensions asking for every site</td>
+              <td><span class="tag tag--live">Live scanner</span></td>
+              <td>Browser extension that sees the pages you open</td>
+            </tr>
+            <tr>
+              <th scope="row"><svg aria-hidden="true"><use href="#i-device"/></svg>PC security</th>
+              <td>Encoded PowerShell, macro documents, ransomware-style mass renames, startup entries, disabled antivirus</td>
+              <td><span class="tag tag--sim">Simulated feed</span></td>
+              <td>Windows agent that reads security logs</td>
+            </tr>
+            <tr>
+              <th scope="row"><svg aria-hidden="true"><use href="#i-accounts"/></svg>Accounts</th>
+              <td>Sign-ins from new countries, silent forwarding rules, brute-force attempts, apps with full access, threats and extortion</td>
+              <td><span class="tag tag--sim">Simulated feed</span> <span class="tag tag--live">Live for messages</span></td>
+              <td>Read-only account connections you approve (OAuth)</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+    </section>
+
+    <section class="method wrap" id="method" aria-labelledby="method-title">
+      <header class="head">
+        <div class="head__text">
+          <h2 id="method-title">How a verdict is made</h2>
+          <p>Two independent layers look at every item. When they disagree, the stricter one wins.</p>
+        </div>
+      </header>
+      <ol class="flow">
+        <li><h3>Collect</h3><p>An alert arrives from the browser, the PC or an account, or you paste something into the scanner.</p></li>
+        <li><h3>Rule engine</h3><p>29 deterministic checks catch known tricks in milliseconds: look-alike domains, encoded commands, threats, demands for your ID.</p></li>
+        <li><h3>AI analyst</h3><p>The model weighs context the rules can't, scores the risk from 0 to 100 and writes the explanation.</p></li>
+        <li><h3>Reconcile</h3><p>The server checks the answer for contradictions. Strong rule hits set a floor the AI can't argue below.</p></li>
+      </ol>
     </section>
   </main>
 
   <footer class="footer">
-    <a class="brand" href="#top"><svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg><span class="brand__word">OPVORA</span></a>
-    <p>Your AI digital guardian. Demo build. Text you scan or send to the assistant is processed by Cloudflare Workers AI and is not stored by OPVORA.</p>
+    <div class="wrap footer__inner">
+      <a class="brand" href="#top"><svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg><span class="brand__word">OPVORA</span></a>
+      <p>Demo build for a competition. Text you scan or send to the assistant is processed by Cloudflare Workers AI and is not stored by OPVORA. If someone threatens your safety, call 911.</p>
+    </div>
   </footer>
 
   <button class="fab" id="chat-open" type="button" aria-controls="chat" aria-expanded="false">
@@ -235,24 +254,24 @@
       <span class="chat__avatar chat__avatar--lg" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
       <div class="chat__title">
         <h2>OPVORA assistant</h2>
-        <p class="chat__status"><span class="dot"></span>Online · sees your console</p>
+        <p class="chat__status"><span class="dot" aria-hidden="true"></span>Online · can see your console</p>
       </div>
-      <button class="btn btn--icon btn--quiet" id="chat-clear" type="button" aria-label="Start a new conversation" title="New conversation"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
-      <button class="btn btn--icon btn--quiet" id="chat-close" type="button" aria-label="Close the assistant" title="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button class="btn btn--quiet btn--icon" id="chat-clear" type="button" aria-label="Start a new conversation" title="New conversation"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
+      <button class="btn btn--quiet btn--icon" id="chat-close" type="button" aria-label="Close the assistant" title="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </header>
     <div class="chat__log" id="chat-log" aria-live="polite"></div>
     <div class="chat__suggest" id="chat-suggest">
-      <p class="mono muted">Try asking</p>
+      <p class="mono">Try asking</p>
       <button type="button">What is my biggest risk right now?</button>
       <button type="button">Someone is threatening me online. What do I do?</button>
       <button type="button">How do I turn on 2-step verification?</button>
     </div>
     <form class="chat__form" id="chat-form">
       <label class="sr-only" for="chat-input">Message the assistant</label>
-      <textarea id="chat-input" rows="1" autocomplete="off" maxlength="1500" placeholder="Ask about any threat or message…"></textarea>
-      <button class="btn btn--icon btn--primary" id="chat-send" type="submit" aria-label="Send"><svg aria-hidden="true"><use href="#i-send"/></svg></button>
+      <textarea id="chat-input" rows="1" autocomplete="off" maxlength="1500" placeholder="Ask about an alert or a message…"></textarea>
+      <button class="btn btn--primary btn--icon" id="chat-send" type="submit" aria-label="Send"><svg aria-hidden="true"><use href="#i-send"/></svg></button>
     </form>
-    <p class="chat__hint">Console events are simulated. Never share passwords or codes here.</p>
+    <p class="chat__hint">Console alerts are simulated. Never share passwords or codes here.</p>
   </aside>
 </body>
 </html>
