@@ -4,3 +4,4 @@ node_modules/
 .env*
 video/raw/
 *.log
+video/motion/
