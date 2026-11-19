@@ -46,3 +46,8 @@ npm run dev          # http://127.0.0.1:8788 with live reload
 npm test             # rule engine + output sanitizer tests
 npm run deploy
 ```
+
+## Showcase video
+
+[video/opvora-showcase.mp4](video/opvora-showcase.mp4): 96 seconds, recorded against the live site. Every AI result in it is a real model response.
+
