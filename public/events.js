@@ -1,0 +1,28 @@
+// SIMULATED sample events for the demo feed. Nothing here comes from the visitor's device or accounts.
+// Each one is still sent, as raw text, to the real AI analyst at /api/analyze.
+export const SAMPLE_EVENTS = [
+  { area: 'browsing', source: 'Browser', title: 'Sign-in page on bancon0va-secure-login.top',
+    raw: 'Browser navigation: user opened http://bancon0va-secure-login.top/acceso from a link in an SMS. Page shows the Banco Nova logo and asks for card number, expiry, CVV and the 6-digit verification code. Domain registered 2 days ago. Real bank domain is banconova.com.mx.' },
+  { area: 'device', source: 'Windows', title: 'Word started PowerShell with an encoded command',
+    raw: 'Process tree: WINWORD.EXE (opened attachment "Factura_Noviembre.docm" from email) -> powershell.exe -nop -w hidden -EncodedCommand JABjAD0AbgBlAHcALQBvAGIAagBlAGMAdAAgAG4AZQB0AC4AdwBlAGIAYwBsAGkAZQBuAHQA... Network: connection to 185.220.101.47:4444 one second later.' },
+  { area: 'accounts', source: 'Personal email', title: 'Sign-in from a new device in another country',
+    raw: 'Account activity: successful sign-in to personal email from a new device (Windows, Chrome) in Lagos, Nigeria at 03:12. Previous sign-in 4 minutes earlier from Mexico City on the usual phone. No 2-step verification enabled on this account.' },
+  { area: 'device', source: 'Windows Update', title: 'Monthly security update installed',
+    raw: 'Windows Update: cumulative security update installed successfully from Microsoft Update servers at 02:00 during scheduled maintenance. Signed by Microsoft. Device restarted normally.' },
+  { area: 'accounts', source: 'Personal email', title: 'New rule forwards invoices to an outside address',
+    raw: 'Mailbox settings change: new forwarding rule created "sync" - forward all mail containing "factura", "invoice" or "pago" to archive.mx.backup@protonmail-secure.net and mark as read. Created 6 minutes after the new-device sign-in.' },
+  { area: 'browsing', source: 'Browser', title: 'Extension wants to read all websites',
+    raw: 'Browser extension "PDF Converter Pro" (installed today from a pop-up ad, 112 users) requested permission to "read and change all your data on all websites" and "manage your downloads".' },
+  { area: 'device', source: 'Files', title: '1,240 files renamed to .locked in 40 seconds',
+    raw: 'File activity: 1,240 files in Documents and Pictures renamed with the .locked extension in 40 seconds by process C:\\Users\\Ana\\AppData\\Roaming\\svch0st.exe. A new file LEEME_RESCATE.txt appeared in every folder. Shadow copies deletion command (vssadmin delete shadows /all /quiet) was run.' },
+  { area: 'accounts', source: 'Social account', title: '14 failed sign-ins, then a password reset',
+    raw: 'Account security: 14 failed login attempts in 6 minutes from 9 different IP addresses, followed by a password reset request sent to the account email. The user did not request it.' },
+  { area: 'browsing', source: 'Downloads', title: 'Download: invoice_8812.pdf.exe',
+    raw: 'Download completed: invoice_8812.pdf.exe (2.1 MB) from a file-sharing link in an email titled "Pago pendiente - urgente". File is unsigned. The name hides an executable behind a fake .pdf extension.' },
+  { area: 'device', source: 'Windows Security', title: 'Real-time protection was turned off',
+    raw: 'Windows Security: real-time protection turned off and tamper protection off at 03:20 by a script, not by the user through Settings. A new startup entry "updater" pointing to AppData\\Roaming\\svch0st.exe was added to HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run.' },
+  { area: 'accounts', source: 'Cloud storage', title: 'Password changed from your usual phone',
+    raw: 'Account activity: password changed successfully from the usual phone (iPhone, Monterrey, Mexico) on the home network, 2-step verification confirmed by the user. Confirmation email received.' },
+  { area: 'accounts', source: 'Social account', title: 'App "Free Followers Boost" got full access',
+    raw: 'Connected apps: third-party app "Free Followers Boost" was granted read/write access: post on your behalf, read direct messages, manage your account. Authorized from a link in a direct message promising 10,000 free followers.' },
+];

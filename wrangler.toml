@@ -1,0 +1,8 @@
+# Cloudflare Pages: static site in public/, API in functions/ (served under /api/*).
+# The AI binding uses Workers AI; on the free plan usage stops at the daily allowance instead of billing.
+name = "opvora-guardian"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-09-01"
+
+[ai]
+binding = "AI"
