@@ -26,7 +26,7 @@ const icon = (id) => {
   svg.append(use);
   return svg;
 };
-const sevChip = (sev) => h('span', { class: 'sev', 'data-sev': sev }, SEV_LABEL[sev] || sev);
+const sevChip = (sev, label) => h('span', { class: 'sev', 'data-sev': sev }, label || SEV_LABEL[sev] || sev);
 
 /* ---------- reveal on scroll ---------- */
 const io = new IntersectionObserver((entries) => {
@@ -54,11 +54,13 @@ function thinking(container, label) {
   ));
 }
 
-function renderAnalysis(container, r, { raw, meta, extra } = {}) {
+function renderAnalysis(container, r, { raw, meta, extra, ask } = {}) {
   const fromAI = r.source === 'ai';
+  const askBtn = h('button', { class: 'btn btn--ghost btn--sm', type: 'button', onclick: () => { openChat(true); send(ask || `Explain this alert and what I should do first: "${r.title}" (${SEV_LABEL[r.severity]}). ${r.summary}`); } },
+    icon('i-spark'), 'Ask OPVORA about this');
   const card = h('article', { class: 'analysis', 'data-sev': r.severity },
     h('div', { class: 'analysis__top' },
-      sevChip(r.severity),
+      sevChip(r.severity, r.verdict === 'unverified' ? 'Unverified' : null),
       h('span', { class: 'tag' }, r.category),
       meta && h('span', { class: 'tag' }, meta),
       h('span', { class: 'analysis__src' }, icon(fromAI ? 'i-spark' : 'i-shield'), fromAI ? `${r.model} · ${(r.ms / 1000).toFixed(1)}s` : 'Rule engine only'),
@@ -75,7 +77,7 @@ function renderAnalysis(container, r, { raw, meta, extra } = {}) {
     h('div', { class: 'block' }, h('h4', {}, `Rule engine · score ${r.rule_score}/100`),
       h('div', { class: 'chips' }, r.signals.length ? r.signals.map((s) => h('span', { class: 'chip' }, s.label)) : h('span', { class: 'chip' }, 'No rule matched'))),
     raw && h('details', { class: 'block' }, h('summary', { class: 'mono muted', style: 'cursor:pointer' }, 'Raw event (simulated sample)'), h('pre', { class: 'raw' }, raw)),
-    extra,
+    h('div', { class: 'analysis__foot' }, extra, askBtn),
   );
   container.replaceChildren(card);
   requestAnimationFrame(() => requestAnimationFrame(() => { card.querySelector('.meter__bar i').style.width = `${r.risk_score}%`; }));
@@ -152,10 +154,10 @@ function select(id) {
       h('button', { class: 'btn', type: 'button', onclick: () => { item.status = 'pending'; state.queue.push(item); pump(); render(); select(item.id); } }, 'Retry analysis')));
   }
   const r = item.result;
-  const resolveBtn = r.severity !== 'none' && h('div', { class: 'analysis__foot' },
-    h('button', { class: `btn${item.resolved ? '' : ' btn--primary'}`, type: 'button', onclick: () => { item.resolved = !item.resolved; render(); select(item.id); } },
-      icon('i-check'), item.resolved ? 'Marked as handled · undo' : 'Mark as handled'),
-    h('span', { class: 'mono muted' }, 'Handled events stop counting against your score.'));
+  const resolveBtn = r.severity !== 'none' && h('button', {
+    class: `btn btn--sm${item.resolved ? '' : ' btn--primary'}`, type: 'button', title: 'Handled events stop counting against your score',
+    onclick: () => { item.resolved = !item.resolved; render(); select(item.id); },
+  }, icon('i-check'), item.resolved ? 'Handled · undo' : 'Mark as handled');
   renderAnalysis(detailEl, r, { raw: item.ev.raw, meta: `${AREA_LABEL[item.ev.area]} · ${item.ev.source}`, extra: resolveBtn });
 }
 
@@ -208,9 +210,11 @@ const EXAMPLES = {
   message: [
     ['Package scam SMS', 'Your package could not be delivered. Pay the 25 MXN customs fee within 24 hours or it will be returned: http://bit.ly/dhl-mx-pago'],
     ['Fake support email', 'Hello, this is the Security Team. We detected unusual activity and your account will be suspended today. To keep it, reply with the 6-digit verification code we just sent to your phone.'],
+    ['Threat demanding info', 'I know where you live. Send me your home address and a photo of your ID by tonight or you will regret it.'],
     ['Normal message', 'Hi! Are we still on for dinner on Friday at 8? I booked the table under my name.'],
   ],
 };
+let lastScan = null;
 const scanForm = $('#scan-form'), scanInput = $('#scan-input'), scanBtn = $('#scan-btn'), scanOut = $('#scan-result'), examplesEl = $('#examples');
 let scanKind = 'url';
 function setKind(kind) {
@@ -230,7 +234,9 @@ scanForm.addEventListener('submit', async (e) => {
   scanBtn.disabled = true;
   thinking(scanOut, 'Rule engine done · AI analyst thinking…');
   try {
-    renderAnalysis(scanOut, await analyze(scanKind, content), { meta: scanKind === 'url' ? 'Link' : 'Message' });
+    const r = await analyze(scanKind, content);
+    lastScan = { content: content.slice(0, 600), r };
+    renderAnalysis(scanOut, r, { meta: r.kind === 'url' ? 'Link' : 'Message', ask: `I scanned this ${r.kind === 'url' ? 'link' : 'message'} and you rated it ${SEV_LABEL[r.severity]}. What exactly should I do now?` });
   } catch (err) {
     scanOut.replaceChildren(h('div', { class: 'empty' }, icon('i-shield'), h('p', {}, err.message)));
   } finally {
@@ -239,7 +245,8 @@ scanForm.addEventListener('submit', async (e) => {
 });
 
 /* ---------- assistant ---------- */
-const chat = $('#chat'), chatOpen = $('#chat-open'), chatLog = $('#chat-log'), chatForm = $('#chat-form'), chatInput = $('#chat-input'), suggest = $('#chat-suggest');
+const chat = $('#chat'), chatOpen = $('#chat-open'), chatLog = $('#chat-log'), chatForm = $('#chat-form'), chatInput = $('#chat-input'), chatSend = $('#chat-send'), suggest = $('#chat-suggest');
+const GREETING = "Hi, I'm OPVORA. Ask me about any alert on your console, a message that worries you, or how to lock down an account.";
 const history = [];
 let chatBusy = false;
 
@@ -252,39 +259,70 @@ function openChat(open) {
 chatOpen.addEventListener('click', () => openChat(true));
 $('#chat-close').addEventListener('click', () => openChat(false));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !chat.hidden) openChat(false); });
-suggest.addEventListener('click', (e) => { if (e.target.closest('button')) send(e.target.closest('button').textContent); });
+suggest.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) send(b.textContent); });
 chatForm.addEventListener('submit', (e) => { e.preventDefault(); send(chatInput.value); });
+chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(chatInput.value); } });
+chatInput.addEventListener('input', growInput);
+function growInput() { chatInput.style.height = 'auto'; chatInput.style.height = `${Math.min(chatInput.scrollHeight, 120)}px`; }
 
-/** Safe mini-markdown: escape first, then allow **bold** and "- " bullets. */
+function aiRow(bubble) {
+  return h('div', { class: 'row row--ai' }, h('span', { class: 'chat__avatar', 'aria-hidden': 'true' }, icon('i-logo')), bubble);
+}
+function resetChat() {
+  if (chatBusy) return;
+  history.length = 0;
+  const hello = h('div', { class: 'msg msg--ai' });
+  hello.innerHTML = md(GREETING);
+  chatLog.replaceChildren(aiRow(hello));
+  suggest.hidden = false;
+}
+$('#chat-clear').addEventListener('click', () => { resetChat(); chatInput.focus(); });
+
+/** Safe mini-markdown: escape first, then allow **bold**, `code`, headings and lists. */
 function md(text) {
   const esc = text.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const bold = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  let html = '', inList = false;
+  const inline = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code>$1</code>');
+  let html = '', list = null;
+  const close = () => { if (list) { html += `</${list}>`; list = null; } };
   for (const line of esc.split('\n')) {
-    const li = line.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)/);
-    if (li) { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${bold(li[1])}</li>`; continue; }
-    if (inList) { html += '</ul>'; inList = false; }
-    if (line.trim()) html += `<p>${bold(line)}</p>`;
+    const ul = line.match(/^\s*[-*•]\s+(.*)/), ol = line.match(/^\s*\d+[.)]\s+(.*)/), hd = line.match(/^\s*#{1,4}\s+(.*)/);
+    const item = ul || ol;
+    if (item) {
+      const want = ol ? 'ol' : 'ul';
+      if (list !== want) { close(); html += `<${want}>`; list = want; }
+      html += `<li>${inline(item[1])}</li>`;
+      continue;
+    }
+    close();
+    if (hd) html += `<p class="msg__h">${inline(hd[1])}</p>`;
+    else if (line.trim()) html += `<p>${inline(line)}</p>`;
   }
-  return html + (inList ? '</ul>' : '');
+  close();
+  return html;
 }
 
 function consoleContext() {
   const done = state.items.filter((i) => i.result);
-  if (!done.length) return `Guardian score ${shownScore}. No events analyzed yet. The simulation has not started.`;
-  return `Guardian score ${shownScore}/100.\n` + done.slice(0, 12).map((i) => `- [${i.result.severity}${i.resolved ? ', handled' : ''}] ${AREA_LABEL[i.ev.area]}: ${i.ev.title}. AI: ${i.result.summary}`).join('\n');
+  let ctx = done.length
+    ? `Guardian score ${shownScore}/100.\n` + done.slice(0, 12).map((i) => `- [${i.result.severity}${i.resolved ? ', handled' : ''}] ${AREA_LABEL[i.ev.area]}: ${i.ev.title}. AI: ${i.result.summary}`).join('\n')
+    : `Guardian score ${shownScore}. No console events analyzed yet; the simulation has not started.`;
+  if (lastScan) ctx += `\nLatest scanner result (real, user-pasted): rated ${lastScan.r.severity} (${lastScan.r.risk_score}/100), "${lastScan.r.title}". ${lastScan.r.summary}\nPasted text: ${lastScan.content}`;
+  return ctx;
 }
 
 async function send(text) {
   text = text.trim();
   if (!text || chatBusy) return;
   chatBusy = true;
+  chatSend.disabled = true;
+  chatLog.setAttribute('aria-busy', 'true');
   chatInput.value = '';
+  growInput();
   suggest.hidden = true;
-  chatLog.append(h('div', { class: 'msg msg--user' }, text));
+  chatLog.append(h('div', { class: 'row row--user' }, h('div', { class: 'msg msg--user' }, text)));
   history.push({ role: 'user', content: text });
-  const bubble = h('div', { class: 'msg msg--ai cursor' });
-  chatLog.append(bubble);
+  const bubble = h('div', { class: 'msg msg--ai' }, h('span', { class: 'typing', 'aria-label': 'OPVORA is typing' }, h('i'), h('i'), h('i')));
+  chatLog.append(aiRow(bubble));
   chatLog.scrollTop = chatLog.scrollHeight;
   let answer = '';
   try {
@@ -304,10 +342,10 @@ async function send(text) {
         if (data === '[DONE]') continue;
         try {
           const j = JSON.parse(data);
-          answer += j.response ?? j.choices?.[0]?.delta?.content ?? '';
+          answer += j.response || j.choices?.[0]?.delta?.content || '';
         } catch { /* partial keep-alive line */ }
       }
-      bubble.innerHTML = md(answer);
+      if (answer) { bubble.innerHTML = md(answer); bubble.classList.add('cursor'); }
       chatLog.scrollTop = chatLog.scrollHeight;
     }
     if (!answer.trim()) throw new Error('The assistant returned an empty answer. Try again.');
@@ -318,9 +356,12 @@ async function send(text) {
     bubble.textContent = err.message;
   } finally {
     bubble.classList.remove('cursor');
+    chatLog.removeAttribute('aria-busy');
     chatBusy = false;
+    chatSend.disabled = false;
   }
 }
+resetChat();
 
 // Exposed for the self-test and the showcase recording.
 window.__opvora = { state, send, setRunning, analyze };

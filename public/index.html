@@ -232,23 +232,27 @@
 
   <aside class="chat" id="chat" aria-label="OPVORA assistant" hidden>
     <header class="chat__head">
-      <svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg>
-      <div><h2>OPVORA assistant</h2><p class="mono muted">Llama 3.3 70B · knows your console</p></div>
-      <button class="btn btn--icon" id="chat-close" type="button" aria-label="Close the assistant"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      <span class="chat__avatar chat__avatar--lg" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+      <div class="chat__title">
+        <h2>OPVORA assistant</h2>
+        <p class="chat__status"><span class="dot"></span>Online · sees your console</p>
+      </div>
+      <button class="btn btn--icon btn--quiet" id="chat-clear" type="button" aria-label="Start a new conversation" title="New conversation"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
+      <button class="btn btn--icon btn--quiet" id="chat-close" type="button" aria-label="Close the assistant" title="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </header>
-    <div class="chat__log" id="chat-log" aria-live="polite">
-      <div class="msg msg--ai"><p>Hi, I'm OPVORA. Ask me about any alert on your console, a message you received, or how to lock down an account.</p></div>
-    </div>
+    <div class="chat__log" id="chat-log" aria-live="polite"></div>
     <div class="chat__suggest" id="chat-suggest">
+      <p class="mono muted">Try asking</p>
       <button type="button">What is my biggest risk right now?</button>
+      <button type="button">Someone is threatening me online. What do I do?</button>
       <button type="button">How do I turn on 2-step verification?</button>
-      <button type="button">Is public Wi-Fi safe for banking?</button>
     </div>
     <form class="chat__form" id="chat-form">
       <label class="sr-only" for="chat-input">Message the assistant</label>
-      <input id="chat-input" autocomplete="off" maxlength="1500" placeholder="Ask about any threat…">
-      <button class="btn btn--icon btn--primary" type="submit" aria-label="Send"><svg aria-hidden="true"><use href="#i-send"/></svg></button>
+      <textarea id="chat-input" rows="1" autocomplete="off" maxlength="1500" placeholder="Ask about any threat or message…"></textarea>
+      <button class="btn btn--icon btn--primary" id="chat-send" type="submit" aria-label="Send"><svg aria-hidden="true"><use href="#i-send"/></svg></button>
     </form>
+    <p class="chat__hint">Console events are simulated. Never share passwords or codes here.</p>
   </aside>
 </body>
 </html>
