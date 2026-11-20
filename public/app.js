@@ -63,7 +63,7 @@ function renderAnalysis(container, r, { raw, meta, extra, ask } = {}) {
       sevChip(r.severity, r.verdict === 'unverified' ? 'Unverified' : null),
       h('span', { class: 'tag' }, r.category),
       meta && h('span', { class: 'tag' }, meta),
-      h('span', { class: 'analysis__src' }, icon(fromAI ? 'i-spark' : 'i-shield'), fromAI ? `${r.model} · ${(r.ms / 1000).toFixed(1)}s` : 'Rule engine only'),
+      h('span', { class: 'analysis__src' }, icon(fromAI ? 'i-spark' : 'i-shield'), fromAI ? `${r.model}, ${(r.ms / 1000).toFixed(1)} s` : 'Rule engine only'),
     ),
     h('h3', {}, r.title),
     h('div', { class: 'meter' }, 'Risk', h('div', { class: 'meter__bar' }, h('i')), h('b', {}, `${r.risk_score}/100`)),
@@ -74,7 +74,7 @@ function renderAnalysis(container, r, { raw, meta, extra, ask } = {}) {
       h('div', { class: 'block' }, h('h4', {}, 'What the AI noticed'), h('ul', { class: 'flags' }, r.indicators.map((t) => h('li', {}, t)))),
       h('div', { class: 'block' }, h('h4', {}, 'What to do'), h('ul', { class: 'actions' }, r.actions.map((t, i) => h('li', {}, h('span', {}, String(i + 1)), h('span', {}, t))))),
     ),
-    h('div', { class: 'block' }, h('h4', {}, `Rule engine · score ${r.rule_score}/100`),
+    h('div', { class: 'block' }, h('h4', {}, `Rule engine score ${r.rule_score}/100`),
       h('div', { class: 'chips' }, r.signals.length ? r.signals.map((s) => h('span', { class: 'chip' }, s.label)) : h('span', { class: 'chip' }, 'No rule matched'))),
     raw && h('details', { class: 'block' }, h('summary', { class: 'mono muted', style: 'cursor:pointer' }, 'Raw event (simulated sample)'), h('pre', { class: 'raw' }, raw)),
     h('div', { class: 'analysis__foot' }, extra, askBtn),
@@ -124,19 +124,21 @@ function pump() {
 
 function updateMeta() {
   const pending = state.items.filter((i) => i.status === 'pending').length;
-  metaEl.textContent = !state.items.length ? 'Idle' : `${state.items.length}/${SAMPLE_EVENTS.length} events · ${pending ? `${pending} analyzing` : state.running ? 'listening' : 'paused'}`;
+  metaEl.textContent = !state.items.length ? 'Idle' : `${state.items.length} of ${SAMPLE_EVENTS.length} alerts, ${pending ? `${pending} analyzing` : state.running ? 'listening' : 'paused'}`;
 }
 
 function render() {
   feedEl.replaceChildren(...state.items.map((item) => {
     const sev = item.result?.severity;
+    const fresh = !item.shown;
+    item.shown = true;
     return h('li', {}, h('button', {
-      type: 'button', class: `event${item.resolved ? ' is-resolved' : ''}`, 'aria-current': String(state.selected === item.id), 'data-sev': item.resolved ? null : sev,
+      type: 'button', class: `event${fresh ? ' event--new' : ''}${item.resolved ? ' is-resolved' : ''}`, 'aria-current': String(state.selected === item.id), 'data-sev': item.resolved ? null : sev,
       onclick: () => select(item.id),
     },
     h('span', { class: 'event__icon' }, icon(AREA_ICON[item.ev.area])),
     h('span', {}, h('span', { class: 'event__title', style: 'display:block' }, item.ev.title),
-      h('span', { class: 'event__meta', style: 'display:block' }, `${item.ev.source} · ${item.at.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}${item.resolved ? ' · resolved' : ''}`)),
+      h('span', { class: 'event__meta' }, h('span', {}, item.ev.source), h('time', { class: 'mono' }, item.at.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })), item.resolved && h('span', {}, 'Handled'))),
     item.status === 'pending' ? h('span', { class: 'sev sev--pending' }, 'AI') : item.status === 'error' ? h('span', { class: 'sev', 'data-sev': 'medium' }, 'Retry') : sevChip(sev)));
   }));
   updateScore();
@@ -157,8 +159,8 @@ function select(id) {
   const resolveBtn = r.severity !== 'none' && h('button', {
     class: `btn btn--sm${item.resolved ? '' : ' btn--primary'}`, type: 'button', title: 'Handled events stop counting against your score',
     onclick: () => { item.resolved = !item.resolved; render(); select(item.id); },
-  }, icon('i-check'), item.resolved ? 'Handled · undo' : 'Mark as handled');
-  renderAnalysis(detailEl, r, { raw: item.ev.raw, meta: `${AREA_LABEL[item.ev.area]} · ${item.ev.source}`, extra: resolveBtn });
+  }, icon('i-check'), item.resolved ? 'Handled, undo' : 'Mark as handled');
+  renderAnalysis(detailEl, r, { raw: item.ev.raw, meta: AREA_LABEL[item.ev.area], extra: resolveBtn });
 }
 
 const scoreBar = $('#score-bar'), scoreNum = $('#score-num'), scoreState = $('#score-state');
@@ -167,9 +169,8 @@ function updateScore() {
   const open = state.items.filter((i) => i.result && !i.resolved);
   const score = Math.max(0, 100 - open.reduce((s, i) => s + SEV_WEIGHT[i.result.severity], 0));
   const color = score >= 80 ? 'var(--accent)' : score >= 50 ? 'var(--sev-medium)' : 'var(--sev-critical)';
-  scoreBar.style.strokeDashoffset = String(326.7 * (1 - score / 100));
-  scoreBar.style.stroke = color;
-  scoreBar.style.color = color;
+  scoreBar.style.width = `${score}%`;
+  scoreBar.style.background = color;
   scoreState.textContent = score >= 80 ? 'All clear' : score >= 50 ? 'Needs attention' : 'Under attack';
   const from = shownScore; const t0 = performance.now();
   const step = (t) => { const k = Math.min(1, (t - t0) / 800); scoreNum.textContent = Math.round(from + (score - from) * (1 - (1 - k) ** 3)); if (k < 1) requestAnimationFrame(step); };
@@ -182,7 +183,7 @@ function updateScore() {
     const worst = order.find((s) => mine.some((i) => i.result.severity === s));
     if (worst) card.dataset.sev = worst; else delete card.dataset.sev;
     card.querySelector('.area__count').textContent = mine.length;
-    card.querySelector('.area__status').textContent = worst ? `${mine.length} open · worst: ${SEV_LABEL[worst]}` : 'No threats';
+    card.querySelector('.area__status').textContent = worst ? `${mine.length} open, worst ${SEV_LABEL[worst].toLowerCase()}` : 'No threats';
   }
 }
 
@@ -232,7 +233,7 @@ scanForm.addEventListener('submit', async (e) => {
   const content = scanInput.value.trim();
   if (!content) return scanInput.focus();
   scanBtn.disabled = true;
-  thinking(scanOut, 'Rule engine done · AI analyst thinking…');
+  thinking(scanOut, 'Rule engine done. AI analyst is reading it…');
   try {
     const r = await analyze(scanKind, content);
     lastScan = { content: content.slice(0, 600), r };
@@ -252,7 +253,6 @@ let chatBusy = false;
 
 function openChat(open) {
   chat.hidden = !open;
-  chatOpen.hidden = open;
   chatOpen.setAttribute('aria-expanded', String(open));
   if (open) chatInput.focus(); else chatOpen.focus();
 }
@@ -362,6 +362,53 @@ async function send(text) {
   }
 }
 resetChat();
+
+/* ---------- theme switcher (System / Light / Dark) ---------- */
+const themeBtns = document.querySelectorAll('[data-theme-set]');
+function applyTheme(t) {
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme;
+  themeBtns.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeSet === (t || 'system'))));
+}
+let savedTheme = null;
+try { savedTheme = localStorage.getItem('opvora-theme'); } catch { /* storage blocked */ }
+applyTheme(savedTheme);
+themeBtns.forEach((b) => b.addEventListener('click', () => {
+  applyTheme(b.dataset.themeSet);
+  try { localStorage.setItem('opvora-theme', b.dataset.themeSet); } catch { /* storage blocked */ }
+}));
+
+/* ---------- keyboard: "/" jumps to the scanner ---------- */
+const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.addEventListener('keydown', (e) => {
+  if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target.closest?.('input, textarea, [contenteditable]')) return;
+  e.preventDefault();
+  scanInput.scrollIntoView({ block: 'center', behavior: reduceMotion() ? 'auto' : 'smooth' });
+  scanInput.focus({ preventScroll: true });
+});
+
+/* ---------- the one authored moment: the sample verdict assembles on load ---------- */
+if (!reduceMotion() && document.visibilityState === 'visible' && document.querySelector('.ticket')) {
+  const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  let t = 150;
+  for (const sel of ['.ticket__quote', '.ticket__flags li', '.ticket__head .sev', '.ticket__title', '.ticket__steps li']) {
+    for (const el of document.querySelectorAll(sel)) {
+      el.animate(
+        [{ opacity: 0, transform: 'translateY(6px)', filter: 'blur(3px)' }, { opacity: 1, transform: 'none', filter: 'none' }],
+        { duration: 520, delay: t, easing: ease, fill: 'backwards' },
+      );
+      t += sel.endsWith('li') ? 110 : 180;
+    }
+  }
+  const scoreEl = document.querySelector('.ticket__score');
+  const start = performance.now() + 150, span = t - 150;
+  const tick = (now) => {
+    const k = Math.max(0, Math.min(1, (now - start) / span));
+    scoreEl.textContent = Math.round(95 * (1 - (1 - k) ** 4)) + ' / 100';
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
 
 // Exposed for the self-test and the showcase recording.
 window.__opvora = { state, send, setRunning, analyze };
