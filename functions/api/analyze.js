@@ -16,5 +16,5 @@ export async function onRequestPost({ request, env }) {
   if (!content) return json({ error: 'Nothing to analyze.' }, 400);
   if (content.length > MAX[kind]) return json({ error: `Too long (max ${MAX[kind]} characters).` }, 413);
 
-  return json(await analyze(env, kind, content));
+  return json(await analyze(env, kind, content, body?.lang === 'es' ? 'es' : 'en'));
 }

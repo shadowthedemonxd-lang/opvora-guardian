@@ -26,3 +26,19 @@ export const SAMPLE_EVENTS = [
   { area: 'accounts', source: 'Social account', title: 'App "Free Followers Boost" got full access',
     raw: 'Connected apps: third-party app "Free Followers Boost" was granted read/write access: post on your behalf, read direct messages, manage your account. Authorized from a link in a direct message promising 10,000 free followers.' },
 ];
+
+// Spanish display titles and sources, same order as SAMPLE_EVENTS. The AI still receives the English raw text.
+export const EVENT_ES = [
+  ['Navegador', 'Página de inicio de sesión en bancon0va-secure-login.top'],
+  ['Windows', 'Word abrió PowerShell con un comando codificado'],
+  ['Correo personal', 'Inicio de sesión desde un equipo nuevo en otro país'],
+  ['Windows Update', 'Se instaló la actualización mensual de seguridad'],
+  ['Correo personal', 'Nueva regla reenvía facturas a una dirección externa'],
+  ['Navegador', 'Una extensión quiere leer todos los sitios web'],
+  ['Archivos', '1,240 archivos renombrados a .locked en 40 segundos'],
+  ['Red social', '14 intentos fallidos y luego un cambio de contraseña'],
+  ['Descargas', 'Descarga: invoice_8812.pdf.exe'],
+  ['Seguridad de Windows', 'Se desactivó la protección en tiempo real'],
+  ['Almacenamiento en la nube', 'Contraseña cambiada desde tu teléfono de siempre'],
+  ['Red social', 'La app "Free Followers Boost" obtuvo acceso total'],
+];
