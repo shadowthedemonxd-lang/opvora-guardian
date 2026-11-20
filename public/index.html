@@ -47,30 +47,25 @@
         <a href="#coverage">Coverage</a>
         <a href="#method">Method</a>
       </nav>
+      <div class="theme" role="radiogroup" aria-label="Color theme"><button type="button" role="radio" data-theme-set="system" aria-checked="true">Auto</button><button type="button" role="radio" data-theme-set="light" aria-checked="false">Light</button><button type="button" role="radio" data-theme-set="dark" aria-checked="false">Dark</button></div>
       <span class="status pill--live" role="status"><span class="dot" aria-hidden="true"></span>AI online</span>
+      <button class="btn btn--primary btn--sm nav__ask" id="chat-open" type="button" aria-controls="chat" aria-expanded="false"><svg aria-hidden="true"><use href="#i-msg"/></svg><span>Ask OPVORA</span></button>
     </div>
   </header>
 
   <main id="top">
     <section class="hero wrap">
       <div class="hero__copy">
-        <p class="kicker">AI digital guardian for browsing, PC and accounts</p>
         <h1>Security alerts, explained in plain words.</h1>
         <p class="lede">OPVORA reads alerts the way a security analyst would. It tells you how serious each one is, why, and what to do first, whether it came from your browser, your computer or one of your accounts.</p>
         <div class="hero__cta">
           <a class="btn btn--primary" href="#console" data-start-demo><svg aria-hidden="true"><use href="#i-play"/></svg>Run the live demo</a>
-          <a class="btn btn--line" href="#scanner">Check a link or message<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--line" href="#scanner">Check a link or message</a>
         </div>
-        <dl class="facts">
-          <div><dt>Analyst model</dt><dd>Llama 3.3 70B</dd></div>
-          <div><dt>Rule checks</dt><dd>29 patterns</dd></div>
-          <div><dt>Typical verdict</dt><dd>5–8 s</dd></div>
-          <div><dt>Your text stored</dt><dd>Never</dd></div>
-        </dl>
       </div>
 
       <figure class="ticket" aria-label="Sample verdict produced by OPVORA">
-        <figcaption class="ticket__cap"><span>Sample verdict</span><span class="mono">OPV-0142 · message scan</span></figcaption>
+        <figcaption class="ticket__cap"><span>Sample verdict for a pasted message</span><span class="mono">OPV-0142</span></figcaption>
         <div class="ticket__body" data-sev="critical">
           <div class="ticket__head">
             <span class="sev" data-sev="critical">Critical</span>
@@ -97,7 +92,7 @@
             </div>
           </div>
         </div>
-        <p class="ticket__foot mono">Condensed from a real verdict in our test set · Llama 3.3 70B</p>
+        <p class="ticket__foot">Condensed from a real Llama 3.3 70B verdict in our test set</p>
       </figure>
     </section>
 
@@ -119,14 +114,11 @@
 
           <div class="desk__status">
             <div class="score">
-              <svg class="score__ring" viewBox="0 0 120 120" aria-hidden="true">
-                <circle cx="60" cy="60" r="52" class="score__track"/>
-                <circle cx="60" cy="60" r="52" class="score__bar" id="score-bar"/>
-              </svg>
               <div class="score__text">
                 <span class="score__num" id="score-num">100</span>
                 <span class="score__label">Guardian score</span>
                 <span class="score__state" id="score-state">All clear</span>
+                <span class="score__meter"><i id="score-bar"></i></span>
               </div>
             </div>
             <div class="areas" id="areas">
@@ -174,7 +166,7 @@
           <label class="sr-only" for="scan-input">Link or message to analyze</label>
           <textarea id="scan-input" rows="6" maxlength="4000" placeholder="https://example.com/login" required></textarea>
           <div class="scan__examples">
-            <span class="mono">Try an example</span>
+            <span class="scan__label">Try an example <span class="kbd-hint">or press <kbd>/</kbd> to type</span></span>
             <div class="examples" id="examples"></div>
           </div>
           <button class="btn btn--primary btn--block" type="submit" id="scan-btn"><svg aria-hidden="true"><use href="#i-shield"/></svg><span>Analyze</span></button>
@@ -245,23 +237,19 @@
     </div>
   </footer>
 
-  <button class="fab" id="chat-open" type="button" aria-controls="chat" aria-expanded="false">
-    <svg aria-hidden="true"><use href="#i-logo"/></svg><span>Ask OPVORA</span>
-  </button>
-
   <aside class="chat" id="chat" aria-label="OPVORA assistant" hidden>
     <header class="chat__head">
       <span class="chat__avatar chat__avatar--lg" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
       <div class="chat__title">
         <h2>OPVORA assistant</h2>
-        <p class="chat__status"><span class="dot" aria-hidden="true"></span>Online · can see your console</p>
+        <p class="chat__status"><span class="dot" aria-hidden="true"></span>Online, can see your console</p>
       </div>
       <button class="btn btn--quiet btn--icon" id="chat-clear" type="button" aria-label="Start a new conversation" title="New conversation"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
       <button class="btn btn--quiet btn--icon" id="chat-close" type="button" aria-label="Close the assistant" title="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </header>
     <div class="chat__log" id="chat-log" aria-live="polite"></div>
     <div class="chat__suggest" id="chat-suggest">
-      <p class="mono">Try asking</p>
+      <p class="chat__suggest-label">Try asking</p>
       <button type="button">What is my biggest risk right now?</button>
       <button type="button">Someone is threatening me online. What do I do?</button>
       <button type="button">How do I turn on 2-step verification?</button>
