@@ -230,7 +230,7 @@ section { padding-block: clamp(64px, 7.5vw, 112px); }
 .pair__go { grid-area: go; justify-self: end; }
 
 /* ---------- habitats (Plate V) ---------- */
-.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-panel); }
+.table-wrap { overflow-x: auto; overflow-y: hidden; /* a moving cell must never summon a scrollbar that re-wraps the table */ background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-panel); }
 .cover-table { width: 100%; border-collapse: collapse; min-width: 780px; font-size: 0.9688rem; }
 .cover-table th, .cover-table td { text-align: left; vertical-align: top; padding: 20px 22px; border-bottom: 1px solid var(--line); }
 .cover-table tbody tr:last-child > * { border-bottom: 0; }

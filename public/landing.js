@@ -408,12 +408,16 @@ addEventListener('load', () => {
   setLens();
   // text decodes into place, left to right; digits only shuffle digits
   const scramble = (el, duration = 0.9) => {
+    el._unscramble?.(); // a replay must never capture a half-decoded string as its final text
     const final = el.textContent, o = { p: 0 }, lang0 = getLang();
     if (el.dataset.i18n && lang0 === 'en') el.dataset.en ??= el.innerHTML; // i18n must never capture a half-decoded string
     const rnd = (c) => (/\d/.test(c) ? String(Math.floor(Math.random() * 10)) : /\s|\W/.test(c) ? c : 'abcdefghkmnoprstuvxz'[Math.floor(Math.random() * 20)]);
+    // lock the width while it decodes so random glyphs never push the neighbouring text around
+    el.style.width = `${el.getBoundingClientRect().width}px`; el.style.whiteSpace = 'nowrap';
     const tw = gsap.to(o, { p: 1, duration, ease: 'none',
-      onUpdate: () => { if (getLang() !== lang0) return tw.kill(); el.textContent = [...final].map((c, i) => (i < o.p * final.length ? c : rnd(c))).join(''); },
-      onComplete: () => { el.textContent = final; } });
+      onUpdate: () => { if (getLang() !== lang0) return el._unscramble(); el.textContent = [...final].map((c, i) => (i < o.p * final.length ? c : rnd(c))).join(''); },
+      onComplete: () => el._unscramble() });
+    el._unscramble = () => { tw.kill(); if (!el.dataset.i18n || getLang() === lang0) el.textContent = final; el.style.width = el.style.whiteSpace = ''; el._unscramble = null; };
   };
 
   // fine pointers: the plate tilts toward the cursor and a soft light follows it; a lamp follows it over the console
@@ -470,12 +474,15 @@ addEventListener('load', () => {
     gsap.from(fake, { [stacked ? 'y' : 'x']: stacked ? -real.offsetHeight * 0.6 : -real.offsetWidth * 0.12, rotate: -1.2, duration: 0.9, ease: 'expo.out', clearProps: 'transform' });
   }, 'top 82%'));
 
-  // habitats: the live/simulated stamps land row by row
-  onView('.cover-table', () => gsap.from('.cover-table tbody .tag, .hab__icon',
-    { scale: 1.35, rotate: (i) => (i % 2 ? 4 : -4), duration: 0.5, stagger: 0.07, ease: 'back.out(2)', clearProps: 'transform' }));
+  // habitats: rows rise in one after another, then the live/simulated tags settle; nothing grows past its cell
+  const rowOf = (el) => [...el.closest('tbody').children].indexOf(el.closest('tr'));
+  onView('.cover-table', () => gsap.timeline({ defaults: { ease: 'expo.out', clearProps: 'transform,opacity' } })
+    .from('.cover-table tbody tr > *', { y: 12, opacity: 0.3, duration: 0.7, stagger: (i, el) => rowOf(el) * 0.12 })
+    .from('.cover-table tbody .tag', { scale: 0.85, opacity: 0.3, duration: 0.5, stagger: (i, el) => rowOf(el) * 0.12, ease: 'back.out(1.7)' }, 0.2));
 
-  // facts strip: numbers decode into place
-  onView('.facts', () => document.querySelectorAll('.facts b').forEach((b, i) => gsap.delayedCall(i * 0.12, () => scramble(b, 0.8))), 'top 92%');
+  // facts strip: numbers decode into place every time the strip scrolls back into view
+  const decodeFacts = () => document.querySelectorAll('.facts b').forEach((b, i) => gsap.delayedCall(i * 0.12, () => scramble(b, 0.8)));
+  ScrollTrigger.create({ trigger: '.facts', start: 'top 92%', end: 'bottom 8%', onEnter: decodeFacts, onEnterBack: decodeFacts });
 
   // look-alikes: the difference gets marked as each pair arrives
   document.querySelectorAll('.pair').forEach((el) => ScrollTrigger.create({ trigger: el, start: 'top 78%', end: 'max', once: true, onEnter: () => el.classList.add('is-in') }));
