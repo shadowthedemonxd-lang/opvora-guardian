@@ -69,6 +69,7 @@ const ES_STATIC = {
   'method.cap': 'Las etiquetas bajo cada paso siguen a la Lámina I, el mensaje de amenaza, por todo el proceso. Los pesos de las reglas son los valores reales del motor.',
   'sos.title': '¿En peligro ahora? (México)', 'sos.911': 'Emergencias', 'sos.088': 'Policía Cibernética, amenazas y extorsión en línea',
   'footer.body': 'Beta pública de OPVORA. El texto que revisas o envías al asistente lo procesa Cloudflare Workers AI y OPVORA no lo guarda. La consola de esta página reproduce alertas simuladas. Si alguien amenaza tu seguridad, llama al 911.',
+  'legal.owner': '© 2026 Z-Corp. Todos los derechos reservados. OPVORA es propiedad de Z-Corp. Built with Llama.',
   'footer.app': 'Abrir la app', 'footer.privacy': 'Privacidad', 'footer.terms': 'Términos',
   'nav.start': 'Empezar', 'hero.start': 'Empezar', 'cta.start': 'Empieza con la beta',
   'cta.ver': 'Revisiones, un historial privado en tu dispositivo, el asistente y guías de primeros auxilios.',

@@ -497,5 +497,5 @@ addEventListener('load', () => {
     } } });
 });
 
-// Exposed for the self-test and the showcase recording.
+// Exposed for the self-test.
 window.__opvora = { state, send, setRunning, analyze };

@@ -40,6 +40,7 @@ addStrings({
     'app.set.versionBody': 'Beta pública. Las cuentas y las conexiones a tu navegador, tu PC y tus cuentas llegarán en próximas betas.',
     'app.set.engine': 'Cómo se hacen las revisiones',
     'app.set.engineBody': '29 reglas más Llama 3.3 70B en Cloudflare Workers AI. Si la IA no está disponible, el resultado dice que viene de las reglas.',
+    'app.set.owner': 'Propiedad',
     'app.set.more': 'Más', 'app.set.showcase': 'Presentación y demo en vivo', 'app.set.privacy': 'Privacidad', 'app.set.terms': 'Términos de uso',
   },
   en: {

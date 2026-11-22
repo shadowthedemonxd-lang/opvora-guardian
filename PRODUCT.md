@@ -41,6 +41,7 @@ Release: public beta v0.1.0. The showcase at `/` stays; "Get started" leads to t
 
 ## Brand Commitments
 
+- Owner: Z-Corp. OPVORA is proprietary (all rights reserved; see `LICENSE`). Footers, Terms and Privacy name Z-Corp.
 - Name: OPVORA. Logo: the shield with the broken ring and center dot (`public/logo.svg`); its shape is fixed, its colors may change to fit the brand.
 - Voice: plain words, calm, specific, no fear-mongering, no hype.
 
@@ -48,7 +49,6 @@ Release: public beta v0.1.0. The showcase at `/` stays; "Get started" leads to t
 
 - A real verdict for the coercive-threat sample (Critical, 95/100) used as the hero sample.
 - Eval script result: 14/14 real-model cases (`scripts/eval.mjs`).
-- Showcase video in `video/`.
 - No customers, testimonials, user counts or press exist; do not invent them.
 
 ## Product Principles

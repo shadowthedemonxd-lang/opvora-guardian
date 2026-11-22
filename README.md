@@ -1,8 +1,8 @@
-﻿# OPVORA Â· Your AI Digital Guardian
+# OPVORA · Your AI Digital Guardian
 
 An AI security analyst for your **browsing**, your **PC** and your **connected accounts**. It reads security events like an analyst would, explains the risk in plain language and tells you what to do next. There's also a small assistant you can talk to.
 
-**Live:** https://opvora-guardian.pages.dev · **Release:** public beta, v0.1.0 (`VERSION` in `public/shared.js`, mirrored in `package.json`)
+**Owner:** Z-Corp · **Live:** https://opvora-guardian.pages.dev · **Release:** public beta, v0.1.0 (`VERSION` in `public/shared.js`, mirrored in `package.json`)
 
 ## Pages
 
@@ -61,13 +61,12 @@ npm test             # rule engine + output sanitizer tests
 npm run deploy
 ```
 
-## Showcase video
-
-[video/opvora-showcase.mp4](video/opvora-showcase.mp4): 93 seconds, recorded against the live site (includes the coercive-threat detection). Every AI result in it is a real model response.
-
-
-
 ## Detection regression check
 
 `node scripts/eval.mjs https://opvora-guardian.pages.dev` runs 14 real-model cases (threats and coercion in English and Spanish, sextortion, phishing, profanity, benign requests). Last run: 14/14.
 
+## License
+
+© 2026 Z-Corp. All rights reserved. OPVORA is proprietary software owned by Z-Corp. The code is public so it can be inspected; no license to copy, reuse or redistribute it is granted. See [LICENSE](LICENSE).
+
+Third-party software, fonts and the AI model keep their own licenses; see [NOTICE](NOTICE). Built with Llama. Llama 3.3 is licensed under the Llama 3.3 Community License, Copyright © Meta Platforms, Inc. All Rights Reserved.

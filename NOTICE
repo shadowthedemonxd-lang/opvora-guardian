@@ -1,0 +1,33 @@
+OPVORA
+Copyright (c) 2026 Z-Corp. All rights reserved. See LICENSE.
+
+OPVORA uses the following third-party software, models and services. They
+belong to their owners and are used under their own licenses.
+
+AI model
+  Llama 3.3 70B Instruct, by Meta, run on Cloudflare Workers AI.
+  Built with Llama.
+  Llama 3.3 is licensed under the Llama 3.3 Community License,
+  Copyright (c) Meta Platforms, Inc. All Rights Reserved.
+  Use of the AI features is also subject to Meta's Llama Acceptable Use Policy.
+  https://www.llama.com/llama3_3/license/
+
+Libraries loaded by the showcase page (not bundled in this repository)
+  GSAP 3.12.5 and ScrollTrigger, by GreenSock: GSAP Standard License.
+    https://gsap.com/standard-license
+  Lenis 1.1.13, by darkroom.engineering: MIT License.
+    https://github.com/darkroomengineering/lenis
+
+Fonts (served by Google Fonts)
+  Atkinson Hyperlegible Next: SIL Open Font License 1.1.
+  Bricolage Grotesque: SIL Open Font License 1.1.
+  JetBrains Mono: SIL Open Font License 1.1.
+
+Hosting and AI
+  Cloudflare Pages, Pages Functions and Workers AI, under Cloudflare's terms.
+
+Development only (not shipped to visitors)
+  Wrangler, by Cloudflare: MIT OR Apache-2.0.
+
+Bank, app and company names shown in examples belong to their owners. They
+appear only to show what scams imitate. OPVORA is not affiliated with them.

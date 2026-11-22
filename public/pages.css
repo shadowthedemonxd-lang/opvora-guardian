@@ -31,6 +31,7 @@
 .pgfoot a { font-weight: 700; color: var(--cloth-ink-2); text-decoration: none; }
 .pgfoot a:hover { color: var(--cloth-ink); text-decoration: underline; }
 .pgfoot .beta { color: var(--lichen); margin-left: auto; }
+.pgfoot__legal { font-size: 0.8125rem; }
 
 .lost [data-lang] { display: grid; gap: 16px; }
 @media (max-width: 640px) {
