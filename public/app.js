@@ -511,23 +511,39 @@ addEventListener('load', () => {
   if (!motion) return;
   document.documentElement.classList.add('js-motion');
 
-  // The one authored moment: the specimen is dissected on load.
-  const lines = leaders.querySelectorAll('.line');
-  lines.forEach((p) => { const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len; });
-  const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.15 });
-  // copy and plate stay visible from the first paint; only the dissection animates
-  tl.from('.plate', { y: 18, rotate: 0.6, duration: 1.2 })
-    .fromTo('.mk', { backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%', duration: 0.6, stagger: 0.22, ease: 'power3.out' }, 0.2)
+  // The one authored moment: the specimen is dissected when it comes into view (on load on desktop, on scroll on phones).
+  const plateScore = $('#plate-score'), count = { n: 0 };
+  plateScore.textContent = '0';
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, scrollTrigger: { trigger: '.plate__body', start: 'center 80%', once: true } });
+  const tlKey = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.3, scrollTrigger: { trigger: '.plate__key', start: 'top 85%', once: true } });
+  tl.from('.plate', { y: 24, rotate: 0.6, duration: 1.1 }) // no fade: the plate is already painted before GSAP loads
+    .fromTo('.mk', { backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%', duration: 0.6, stagger: 0.22, ease: 'power3.out' }, 0.25)
     .from('.mk .pin', { scale: 0, duration: 0.5, stagger: 0.22, ease: 'back.out(3)' }, '<')
-    .to(lines, { strokeDashoffset: 0, duration: 0.9, stagger: 0.12, ease: 'power2.inOut' }, '-=0.4')
-    .from('.leaders circle', { scale: 0, transformOrigin: 'center', duration: 0.3, stagger: 0.2 }, '-=0.5')
-    .from('.marks__list li', { x: -8, opacity: 0.25, duration: 0.6, stagger: 0.18 }, '<')
-    .from('.tox__bar i', { width: 0, duration: 1.2 }, '-=0.5')
-    .from('.first li', { y: 6, opacity: 0.25, duration: 0.5, stagger: 0.1 }, '-=0.9')
-    .add(() => lines.forEach((p) => { p.style.strokeDasharray = ''; p.style.strokeDashoffset = ''; }));
+    // wipe the whole leader layer left to right: survives drawLeaders() replacing the paths mid-animation
+    .fromTo('.leaders', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power2.inOut', clearProps: 'clipPath' }, '-=0.3')
+    .from('.marks__list li', { x: -10, opacity: 0, duration: 0.6, stagger: 0.18 }, '-=0.7');
+  tlKey.from('.tox__sev', { y: 8, opacity: 0, duration: 0.5 })
+    .to(count, { n: 95, duration: 1.2, ease: 'power3.out', onUpdate: () => { plateScore.textContent = Math.round(count.n); } }, '<')
+    .from('.tox__bar i', { width: 0, duration: 1.2 }, '<')
+    .from('.first li', { y: 8, opacity: 0, duration: 0.5, stagger: 0.1 }, '-=0.9');
+
+  // everything below the cover rises in as it is reached
+  const reveal = gsap.utils.toArray('.head, .desk, .scan, .pair, .table-wrap, .flow li, .close__inner > *, .footer__inner > *');
+  gsap.set(reveal, { y: 28, opacity: 0 });
+  ScrollTrigger.batch(reveal, { start: 'top 90%', end: 'max', once: true, // end 'max' so items already scrolled past still fire on load
+    onEnter: (els) => gsap.to(els, { y: 0, opacity: 1, duration: 0.9, stagger: 0.09, ease: 'expo.out', overwrite: true }) });
+
+  // facts strip: numbers count up
+  document.querySelectorAll('.facts b').forEach((b) => {
+    const [, n, rest] = b.textContent.match(/^(\d+)(.*)$/) || [];
+    if (!+n) return;
+    const o = { v: 0 };
+    gsap.to(o, { v: +n, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: '.facts', start: 'top 92%', once: true },
+      onUpdate: () => { b.textContent = Math.round(o.v) + rest; } });
+  });
 
   // look-alikes: the difference gets marked as each pair arrives
-  document.querySelectorAll('.pair').forEach((el) => ScrollTrigger.create({ trigger: el, start: 'top 78%', once: true, onEnter: () => el.classList.add('is-in') }));
+  document.querySelectorAll('.pair').forEach((el) => ScrollTrigger.create({ trigger: el, start: 'top 78%', end: 'max', once: true, onEnter: () => el.classList.add('is-in') }));
 
   // method: the rail fills with the scroll, each step lights as it is reached
   const steps = [...document.querySelectorAll('.flow li')];
