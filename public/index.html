@@ -63,6 +63,7 @@
       <div class="seg seg--theme" role="radiogroup" aria-label="Color theme" data-i18n-attr="aria-label:theme.label">
         <button type="button" role="radio" data-theme-set="system" aria-checked="true" aria-label="Auto" data-i18n-attr="aria-label:theme.auto" title="Auto"><svg aria-hidden="true"><use href="#i-auto"/></svg></button><button type="button" role="radio" data-theme-set="light" aria-checked="false" aria-label="Light" data-i18n-attr="aria-label:theme.light" title="Light"><svg aria-hidden="true"><use href="#i-sun"/></svg></button><button type="button" role="radio" data-theme-set="dark" aria-checked="false" aria-label="Dark" data-i18n-attr="aria-label:theme.dark" title="Dark"><svg aria-hidden="true"><use href="#i-moon"/></svg></button>
       </div>
+      <div class="seg seg--cycle"><button type="button" id="theme-cycle"><svg aria-hidden="true"><use href="#i-auto"/></svg></button></div>
       <button class="btn btn--ink btn--sm nav__ask" id="chat-open" type="button" aria-controls="chat" aria-expanded="false"><svg aria-hidden="true"><use href="#i-msg"/></svg><span data-i18n="nav.ask">Ask OPVORA</span></button>
     </div>
   </header>
@@ -100,6 +101,7 @@
             <div class="specimen">
               <p class="specimen__from"><svg aria-hidden="true"><use href="#i-msg"/></svg><span data-i18n="plate.from">Unknown number</span><span class="mono">21:47</span></p>
               <p class="specimen__msg" data-i18n="plate.msg"><mark class="mk" data-n="1">I know where you live&#8288;<i class="pin" aria-hidden="true">1</i></mark>. Send me <mark class="mk" data-n="2">your home address and a photo of your ID&#8288;<i class="pin" aria-hidden="true">2</i></mark> <mark class="mk" data-n="3">by tonight&#8288;<i class="pin" aria-hidden="true">3</i></mark> or you will regret it.</p>
+              <p class="scanread"><i aria-hidden="true"></i><span data-i18n="plate.found">3 marks found</span></p>
             </div>
             <div class="marks">
               <h2 class="marks__title" data-i18n="plate.marks">Marks</h2>
@@ -206,6 +208,7 @@
             </div>
             <label class="sr-only" for="scan-input" data-i18n="scan.inputLabel">Link or message to analyze</label>
             <textarea id="scan-input" rows="6" maxlength="4000" placeholder="https://example.com/login" required data-lenis-prevent></textarea>
+            <p class="readout" id="scan-readout"></p>
             <div class="scan__examples">
               <span class="scan__label"><span data-i18n="scan.try">Try an example</span> <span class="kbd-hint" data-i18n="scan.kbd">or press <kbd>/</kbd> to type</span></span>
               <div class="examples" id="examples"></div>

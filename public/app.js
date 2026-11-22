@@ -247,8 +247,14 @@ function setKind(kind) {
   document.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', String(x.dataset.kind === kind)));
   scanInput.placeholder = t(kind === 'url' ? 'scan.urlPh' : 'scan.msgPh');
   scanInput.maxLength = kind === 'url' ? 2048 : 4000;
-  examplesEl.replaceChildren(...EXAMPLES[kind].map(([key, text]) => h('button', { type: 'button', onclick: () => { scanInput.value = typeof text === 'string' ? text : text[getLang()]; scanInput.focus(); } }, EX_LABEL[getLang()][key])));
+  examplesEl.replaceChildren(...EXAMPLES[kind].map(([key, text]) => h('button', { type: 'button', onclick: () => { scanInput.value = typeof text === 'string' ? text : text[getLang()]; paintReadout(); scanInput.focus(); } }, EX_LABEL[getLang()][key])));
+  paintReadout();
 }
+// live readout under the box: what kind of item, how long, and the standing promise that nothing is kept
+function paintReadout() {
+  $('#scan-readout').textContent = t('scan.readout', { kind: t(scanKind === 'url' ? 'scan.link' : 'scan.message').toLowerCase(), n: scanInput.value.length, max: scanInput.maxLength });
+}
+scanInput.addEventListener('input', paintReadout);
 document.querySelectorAll('.tab').forEach((x) => x.addEventListener('click', () => setKind(x.dataset.kind)));
 setKind('url');
 
@@ -276,6 +282,7 @@ function identify(text, kind) {
   if (!text) return;
   setKind(kind || (/^\S+$/.test(text) && /\.\w{2,}/.test(text) ? 'url' : 'message'));
   scanInput.value = text;
+  paintReadout();
   scrollToEl(scanOut, 'center');
   scanForm.requestSubmit();
 }
@@ -414,18 +421,32 @@ resetChat();
 detailEmpty();
 
 /* ---------- theme (Auto / Light / Dark) and language ---------- */
-const themeBtns = document.querySelectorAll('[data-theme-set]');
+const themeBtns = document.querySelectorAll('[data-theme-set]'), themeCycle = $('#theme-cycle');
+const THEME_ICON = { system: 'i-auto', light: 'i-sun', dark: 'i-moon' };
+let themeNow = 'system';
 function applyTheme(x) {
-  if (x === 'light' || x === 'dark') document.documentElement.dataset.theme = x; else delete document.documentElement.dataset.theme;
-  themeBtns.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeSet === (x || 'system'))));
+  themeNow = x === 'light' || x === 'dark' ? x : 'system';
+  if (themeNow === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = themeNow;
+  themeBtns.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeSet === themeNow)));
+  paintThemeCycle();
+}
+// phones get one button that steps Auto → Light → Dark; its label reuses the (translated) labels of the full switch
+function paintThemeCycle() {
+  const seg = $('.seg--theme'), active = $(`[data-theme-set="${themeNow}"]`);
+  themeCycle.querySelector('use').setAttribute('href', `#${THEME_ICON[themeNow]}`);
+  themeCycle.setAttribute('aria-label', `${seg.getAttribute('aria-label')}: ${active.getAttribute('aria-label')}`);
+  themeCycle.title = themeCycle.getAttribute('aria-label');
+}
+function saveTheme(x) {
+  applyTheme(x);
+  try { localStorage.setItem('opvora-theme', themeNow); } catch { /* storage blocked */ }
 }
 let savedTheme = null;
 try { savedTheme = localStorage.getItem('opvora-theme'); } catch { /* storage blocked */ }
 applyTheme(savedTheme);
-themeBtns.forEach((b) => b.addEventListener('click', () => {
-  applyTheme(b.dataset.themeSet);
-  try { localStorage.setItem('opvora-theme', b.dataset.themeSet); } catch { /* storage blocked */ }
-}));
+themeBtns.forEach((b) => b.addEventListener('click', () => saveTheme(b.dataset.themeSet)));
+themeCycle.addEventListener('click', () => saveTheme({ system: 'light', light: 'dark', dark: 'system' }[themeNow]));
+onLang(paintThemeCycle);
 
 document.querySelectorAll('[data-lang-set]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.langSet)));
 function repaintLang() {
@@ -476,8 +497,20 @@ if (plateBody) new ResizeObserver(() => drawLeaders()).observe(plateBody);
 document.fonts?.ready.then(drawLeaders);
 
 /* ---------- motion: GSAP + ScrollTrigger + Lenis, only when motion is welcome ---------- */
+// habitats on phones: each cell carries its column name, refreshed when the language changes
+function labelHabitats() {
+  const heads = [...document.querySelectorAll('.cover-table thead th')].map((th) => th.textContent.trim());
+  document.querySelectorAll('.cover-table tbody tr').forEach((tr) => [...tr.children].forEach((cell, i) => { cell.dataset.label = heads[i]; }));
+}
+labelHabitats();
+onLang(labelHabitats);
+
 const nav = $('.nav'), cover = $('.cover');
-function onScrollNav() { nav.classList.toggle('is-scrolled', window.scrollY > cover.offsetHeight - nav.offsetHeight - 4); }
+function onScrollNav() {
+  nav.classList.toggle('is-scrolled', window.scrollY > cover.offsetHeight - nav.offsetHeight - 4);
+  const max = document.documentElement.scrollHeight - innerHeight;
+  nav.style.setProperty('--sp', max > 0 ? (window.scrollY / max).toFixed(4) : '0');
+}
 addEventListener('scroll', onScrollNav, { passive: true });
 onScrollNav();
 
@@ -512,43 +545,94 @@ addEventListener('load', () => {
   document.documentElement.classList.add('js-motion');
 
   // The one authored moment: the specimen is dissected when it comes into view (on load on desktop, on scroll on phones).
-  const plateScore = $('#plate-score'), count = { n: 0 };
-  plateScore.textContent = '0';
-  const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, scrollTrigger: { trigger: '.plate__body', start: 'center 80%', once: true } });
-  const tlKey = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.3, scrollTrigger: { trigger: '.plate__key', start: 'top 85%', once: true } });
-  tl.from('.plate', { y: 24, rotate: 0.6, duration: 1.1 }) // no fade: the plate is already painted before GSAP loads
-    .fromTo('.mk', { backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%', duration: 0.6, stagger: 0.22, ease: 'power3.out' }, 0.25)
-    .from('.mk .pin', { scale: 0, duration: 0.5, stagger: 0.22, ease: 'back.out(3)' }, '<')
+  const plateScore = $('#plate-score'), count = { n: 95 };
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, scrollTrigger: { trigger: '.plate__body', start: 'top 88%', once: true } });
+  const tlKey = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.3, scrollTrigger: { trigger: '.plate__key', start: 'top 95%', once: true } });
+  const msg = $('.specimen__msg'), lens = { s: 0, r: 16 };
+  const setLens = () => { msg.style.setProperty('--scan', lens.s.toFixed(3)); msg.style.setProperty('--ret', `${lens.r.toFixed(1)}px`); };
+  setLens();
+  // text decodes into place, left to right; digits only shuffle digits
+  const scramble = (el, duration = 0.9) => {
+    const final = el.textContent, o = { p: 0 }, lang0 = getLang();
+    if (el.dataset.i18n && lang0 === 'en') el.dataset.en ??= el.innerHTML; // i18n must never capture a half-decoded string
+    const rnd = (c) => (/\d/.test(c) ? String(Math.floor(Math.random() * 10)) : /\s|\W/.test(c) ? c : 'abcdefghkmnoprstuvxz'[Math.floor(Math.random() * 20)]);
+    const tw = gsap.to(o, { p: 1, duration, ease: 'none',
+      onUpdate: () => { if (getLang() !== lang0) return tw.kill(); el.textContent = [...final].map((c, i) => (i < o.p * final.length ? c : rnd(c))).join(''); },
+      onComplete: () => { el.textContent = final; } });
+  };
+
+  // fine pointers: the plate tilts toward the cursor and a soft light follows it; a lamp follows it over the console
+  const plate = $('.plate');
+  gsap.set(plate, { transformPerspective: 1200 });
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const con = $('.console');
+    con.addEventListener('pointermove', (e) => {
+      const b = con.getBoundingClientRect();
+      con.style.setProperty('--lx', `${e.clientX - b.left}px`); con.style.setProperty('--ly', `${e.clientY - b.top}px`); con.style.setProperty('--lamp', '1');
+    });
+    con.addEventListener('pointerleave', () => con.style.setProperty('--lamp', '0'));
+    const rx = gsap.quickTo(plate, 'rotationX', { duration: 0.8, ease: 'power3' }), ry = gsap.quickTo(plate, 'rotationY', { duration: 0.8, ease: 'power3' });
+    plate.addEventListener('pointermove', (e) => {
+      const b = plate.getBoundingClientRect(), x = (e.clientX - b.left) / b.width, y = (e.clientY - b.top) / b.height;
+      ry((x - 0.5) * 5); rx((0.5 - y) * 4);
+      plate.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`); plate.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+      plate.classList.add('is-tilt');
+    });
+    plate.addEventListener('pointerleave', () => { rx(0); ry(0); plate.classList.remove('is-tilt'); });
+  }
+  tl.from('.plate', { y: 24, duration: 1.1 }) // no fade: the plate is already painted before GSAP loads
+    // the lens locks on (brackets close in), sweeps the message once, then the marks light up
+    .to(lens, { r: 8, duration: 0.7, onUpdate: setLens }, 0.1)
+    .set(msg, { '--scan-o': 1 }, 0.35)
+    .to(lens, { s: 1, duration: 0.9, ease: 'power2.inOut', onUpdate: setLens }, 0.35)
+    .to(msg, { '--scan-o': 0, duration: 0.3 }, '>-0.05')
+    .add(() => scramble($('.scanread span')), '<')
+    .fromTo('.mk', { backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%', duration: 0.6, stagger: 0.22, ease: 'power3.out' }, 0.75)
+    .from('.mk .pin', { scale: 0.4, duration: 0.5, stagger: 0.22, ease: 'back.out(3)' }, '<')
     // wipe the whole leader layer left to right: survives drawLeaders() replacing the paths mid-animation
     .fromTo('.leaders', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power2.inOut', clearProps: 'clipPath' }, '-=0.3')
-    .from('.marks__list li', { x: -10, opacity: 0, duration: 0.6, stagger: 0.18 }, '-=0.7');
-  tlKey.from('.tox__sev', { y: 8, opacity: 0, duration: 0.5 })
-    .to(count, { n: 95, duration: 1.2, ease: 'power3.out', onUpdate: () => { plateScore.textContent = Math.round(count.n); } }, '<')
+    .from('.marks__list li', { x: -10, opacity: 0.3, duration: 0.6, stagger: 0.18 }, '-=0.7');
+  // every start state stays readable: nothing on the plate is ever blank while it waits for its trigger
+  tlKey.from('.tox__sev', { y: 8, opacity: 0.3, duration: 0.5 })
+    .fromTo(count, { n: 0 }, { n: 95, duration: 1.2, ease: 'power3.out', immediateRender: false, onUpdate: () => { plateScore.textContent = Math.round(count.n); } }, '<')
     .from('.tox__bar i', { width: 0, duration: 1.2 }, '<')
-    .from('.first li', { y: 8, opacity: 0, duration: 0.5, stagger: 0.1 }, '-=0.9');
+    .from('.first li', { y: 8, opacity: 0.3, duration: 0.5, stagger: 0.1 }, '-=0.9');
 
-  // everything below the cover rises in as it is reached
-  const reveal = gsap.utils.toArray('.head, .desk, .scan, .pair, .table-wrap, .flow li, .close__inner > *, .footer__inner > *');
-  gsap.set(reveal, { y: 28, opacity: 0 });
-  ScrollTrigger.batch(reveal, { start: 'top 90%', end: 'max', once: true, // end 'max' so items already scrolled past still fire on load
-    onEnter: (els) => gsap.to(els, { y: 0, opacity: 1, duration: 0.9, stagger: 0.09, ease: 'expo.out', overwrite: true }) });
+  // Each section gets its own small motion, always starting from visible content.
+  // end 'max' everywhere so a trigger already scrolled past still fires on load.
+  const onView = (trigger, fn, start = 'top 80%') => ScrollTrigger.create({ trigger, start, end: 'max', once: true, onEnter: fn });
 
-  // facts strip: numbers count up
-  document.querySelectorAll('.facts b').forEach((b) => {
-    const [, n, rest] = b.textContent.match(/^(\d+)(.*)$/) || [];
-    if (!+n) return;
-    const o = { v: 0 };
-    gsap.to(o, { v: +n, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: '.facts', start: 'top 92%', once: true },
-      onUpdate: () => { b.textContent = Math.round(o.v) + rest; } });
-  });
+  // console: the desk runs a self-check as it arrives: the meter sweeps and the three areas tick
+  onView('.desk', () => gsap.timeline({ defaults: { ease: 'expo.out' } })
+    .fromTo('#score-bar', { scaleX: 0, transformOrigin: 'left' }, { scaleX: 1, duration: 1.1, clearProps: 'transform' })
+    .from('.area svg', { scale: 0.6, rotate: -12, duration: 0.6, stagger: 0.12, ease: 'back.out(2.5)' }, 0.15)
+    .from('.area__count', { y: -6, duration: 0.5, stagger: 0.12 }, '<'));
+
+  // look-alikes: the fake peels off the real one, then its differences get marked (the .is-in hook below)
+  document.querySelectorAll('.pair').forEach((el) => onView(el, () => {
+    const real = el.querySelector('.pair__side--real'), fake = el.querySelector('.pair__side--fake');
+    const stacked = fake.offsetTop > real.offsetTop; // phones stack the pair, so it peels down instead of sideways
+    gsap.from(fake, { [stacked ? 'y' : 'x']: stacked ? -real.offsetHeight * 0.6 : -real.offsetWidth * 0.12, rotate: -1.2, duration: 0.9, ease: 'expo.out', clearProps: 'transform' });
+  }, 'top 82%'));
+
+  // habitats: the live/simulated stamps land row by row
+  onView('.cover-table', () => gsap.from('.cover-table tbody .tag, .hab__icon',
+    { scale: 1.35, rotate: (i) => (i % 2 ? 4 : -4), duration: 0.5, stagger: 0.07, ease: 'back.out(2)', clearProps: 'transform' }));
+
+  // facts strip: numbers decode into place
+  onView('.facts', () => document.querySelectorAll('.facts b').forEach((b, i) => gsap.delayedCall(i * 0.12, () => scramble(b, 0.8))), 'top 92%');
 
   // look-alikes: the difference gets marked as each pair arrives
   document.querySelectorAll('.pair').forEach((el) => ScrollTrigger.create({ trigger: el, start: 'top 78%', end: 'max', once: true, onEnter: () => el.classList.add('is-in') }));
 
   // method: the rail fills with the scroll, each step lights as it is reached
-  const steps = [...document.querySelectorAll('.flow li')];
+  const method = $('.method'), flow = $('.flow'), steps = [...flow.children];
+  ScrollTrigger.create({ trigger: method, start: 'top bottom', end: 'bottom top', onToggle: (s) => method.classList.toggle('is-live', s.isActive) }); // the rail packet only runs on screen
   gsap.fromTo('.rail i', { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '.method', start: 'top 70%', end: 'bottom 75%', scrub: 0.6,
-    onUpdate: (s) => steps.forEach((li, i) => li.classList.toggle('is-on', s.progress >= i / steps.length + 0.02)) } });
+    onUpdate: (s) => {
+      method.style.setProperty('--p', s.progress.toFixed(3)); // drives the vertical rail on phones and the packet's run
+      steps.forEach((li, i) => li.classList.toggle('is-on', s.progress >= i / steps.length + 0.02));
+    } } });
 });
 
 // Exposed for the self-test and the showcase recording.
