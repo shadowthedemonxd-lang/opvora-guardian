@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Page not found · OPVORA</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#D4E35A" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17271D" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/pages.css">
+  <script>try { const t = localStorage.getItem('opvora-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; if (localStorage.getItem('opvora-lang') === 'es') document.documentElement.lang = 'es-MX'; } catch {}</script>
+  <script type="module" src="/page.js"></script>
+</head>
+<body>
+  <a class="skip" href="#lost" data-i18n="pg.skip">Skip to content</a>
+  <header class="pghead">
+    <div class="wrap pghead__inner">
+      <a class="brand" href="/" aria-label="OPVORA"><span class="brand__tile"><svg class="brand__mark" aria-hidden="true"><use href="/icons.svg#i-logo"/></svg></span><span class="brand__word">OPVORA</span></a>
+      <span class="beta" data-version>beta · v0.1.0</span>
+      <div class="seg seg--lang" role="group" aria-label="Language / Idioma"><button type="button" data-lang-set="en" aria-pressed="true" lang="en">EN</button><button type="button" data-lang-set="es" aria-pressed="false" lang="es">ES</button></div>
+      <div class="seg seg--theme" role="radiogroup" aria-label="Color theme" data-i18n-attr="aria-label:theme.label"><button type="button" role="radio" data-theme-set="system" aria-checked="true" aria-label="Auto" data-i18n-attr="aria-label:theme.auto" title="Auto"><svg aria-hidden="true"><use href="/icons.svg#i-auto"/></svg></button><button type="button" role="radio" data-theme-set="light" aria-checked="false" aria-label="Light" data-i18n-attr="aria-label:theme.light" title="Light"><svg aria-hidden="true"><use href="/icons.svg#i-sun"/></svg></button><button type="button" role="radio" data-theme-set="dark" aria-checked="false" aria-label="Dark" data-i18n-attr="aria-label:theme.dark" title="Dark"><svg aria-hidden="true"><use href="/icons.svg#i-moon"/></svg></button></div>
+      <div class="seg seg--cycle"><button type="button" id="theme-cycle"><svg aria-hidden="true"><use href="/icons.svg#i-auto"/></svg></button></div>
+      <a class="btn btn--ink btn--sm pghead__open" href="/app/" aria-label="Open the app" data-i18n-attr="aria-label:pg.open"><span data-i18n="pg.open">Open the app</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+    </div>
+  </header>
+
+  <main class="wrap lost" id="lost">
+    <div data-lang="en" lang="en">
+      <h1>Nothing lives at this address</h1>
+      <p>The link may be old or mistyped. If someone sent it to you and it promised a prize, a refund or an urgent fix, that is a warning sign in itself.</p>
+    </div>
+    <div data-lang="es" lang="es-MX">
+      <h1>Aquí no hay nada</h1>
+      <p>El enlace puede ser viejo o estar mal escrito. Si alguien te lo mandó prometiendo un premio, un reembolso o una solución urgente, eso ya es una señal de alerta.</p>
+    </div>
+    <div class="lost__cta">
+      <a class="btn btn--ink" href="/app/"><svg aria-hidden="true"><use href="/icons.svg#i-search"/></svg><span data-i18n="pg.check">Check a link or message</span></a>
+      <a class="btn btn--line" href="/"><span data-i18n="pg.home2">Go to the home page</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+    </div>
+  </main>
+
+  <footer class="pgfoot">
+    <div class="wrap pgfoot__inner">
+      <a href="/" data-i18n="pg.home">Home</a><a href="/app/" data-i18n="pg.app">App</a><a href="/privacy" data-i18n="pg.privacy">Privacy</a><a href="/terms" data-i18n="pg.terms">Terms</a>
+      <span class="beta" data-version>beta · v0.1.0</span>
+    </div>
+  </footer>
+</body>
+</html>

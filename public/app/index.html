@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Check · OPVORA</title>
+  <meta name="description" content="Check a link or a message before you trust it. OPVORA rates how serious it is, explains why and tells you what to do first.">
+  <meta name="theme-color" content="#1C3B2C">
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/app/app.css">
+  <script>try { const t = localStorage.getItem('opvora-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; if (localStorage.getItem('opvora-lang') === 'es') document.documentElement.lang = 'es-MX'; } catch {}</script>
+  <script type="module" src="/app/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="app.skip">Skip to content</a>
+
+  <div class="shell">
+    <div class="side">
+      <div class="side__top">
+        <a class="brand" href="/" aria-label="OPVORA, back to the home page" data-i18n-attr="aria-label:app.homeLabel">
+          <span class="brand__tile"><svg class="brand__mark" aria-hidden="true"><use href="/icons.svg#i-logo"/></svg></span>
+          <span class="brand__word">OPVORA</span>
+        </a>
+        <span class="beta" data-version>beta · v0.1.0</span>
+      </div>
+      <nav class="appnav" aria-label="App" data-i18n-attr="aria-label:app.navLabel">
+        <a href="#/check" data-route="check"><svg aria-hidden="true"><use href="/icons.svg#i-search"/></svg><span data-i18n="app.nav.check">Check</span></a>
+        <a href="#/history" data-route="history"><svg aria-hidden="true"><use href="/icons.svg#i-history"/></svg><span data-i18n="app.nav.history">History</span><b class="appnav__count" id="hist-count" hidden></b></a>
+        <a href="#/assistant" data-route="assistant"><svg aria-hidden="true"><use href="/icons.svg#i-msg"/></svg><span data-i18n="app.nav.assistant">Assistant</span></a>
+        <a href="#/help" data-route="help"><svg aria-hidden="true"><use href="/icons.svg#i-aid"/></svg><span data-i18n="app.nav.help">First aid</span></a>
+        <a href="#/settings" data-route="settings"><svg aria-hidden="true"><use href="/icons.svg#i-sliders"/></svg><span data-i18n="app.nav.settings">Settings</span></a>
+      </nav>
+      <div class="side__foot">
+        <span class="status" data-ai-status role="status"><span class="dot" aria-hidden="true"></span><span>AI online</span></span>
+        <a class="side__link" href="/"><svg aria-hidden="true"><use href="/icons.svg#i-back"/></svg><span data-i18n="app.showcase">Back to the showcase</span></a>
+      </div>
+    </div>
+
+    <main class="main" id="main" tabindex="-1">
+      <!-- Check -->
+      <section class="view" data-view="check" aria-labelledby="check-title">
+        <header class="view__head">
+          <h1 id="check-title" tabindex="-1" data-i18n="app.check.title">Check a link or a message</h1>
+          <p data-i18n="app.check.lede">Paste what you received. The rule engine checks it first, then the AI analyst tells you how serious it is and what to do.</p>
+        </header>
+
+        <div class="welcome" id="welcome" hidden>
+          <span class="welcome__mark" aria-hidden="true"><svg><use href="/icons.svg#i-logo"/></svg></span>
+          <div class="welcome__text">
+            <h2 data-i18n="app.welcome.title">Welcome to the OPVORA beta</h2>
+            <p data-i18n="app.welcome.body">Checks and the assistant are live. Your history stays in this browser. Connecting your accounts, browser and PC comes in later betas.</p>
+          </div>
+          <button class="btn btn--ink btn--sm" id="welcome-ok" type="button"><svg aria-hidden="true"><use href="/icons.svg#i-check"/></svg><span data-i18n="app.welcome.ok">Got it</span></button>
+        </div>
+
+        <div class="check">
+          <form class="panel check__form" id="check-form">
+            <div class="tabs" role="tablist" aria-label="What are you checking?" data-i18n-attr="aria-label:app.check.kind">
+              <button type="button" role="tab" class="tab" aria-selected="true" data-kind="url"><svg aria-hidden="true"><use href="/icons.svg#i-link"/></svg><span data-i18n="scan.link">Link</span></button>
+              <button type="button" role="tab" class="tab" aria-selected="false" data-kind="message"><svg aria-hidden="true"><use href="/icons.svg#i-msg"/></svg><span data-i18n="scan.message">Message</span></button>
+            </div>
+            <label class="sr-only" for="check-input" data-i18n="scan.inputLabel">Link or message to analyze</label>
+            <textarea id="check-input" rows="7" maxlength="4000" required></textarea>
+            <p class="readout" id="check-readout"></p>
+            <details class="tryex">
+              <summary><span data-i18n="scan.try">Try an example</span></summary>
+              <div class="examples" id="check-examples"></div>
+            </details>
+            <button class="btn btn--ink btn--block" type="submit" id="check-btn"><svg aria-hidden="true"><use href="/icons.svg#i-search"/></svg><span data-i18n="scan.submit">Analyze</span></button>
+            <p class="check__note" id="check-note"></p>
+          </form>
+          <div class="panel check__result" id="check-result" aria-live="polite"></div>
+        </div>
+
+        <section class="coverage" aria-labelledby="cov-title">
+          <h2 id="cov-title" data-i18n="app.cov.title">What this beta covers</h2>
+          <ul class="coverage__list">
+            <li><span class="cov__icon" aria-hidden="true"><svg><use href="/icons.svg#i-search"/></svg></span><div><h3 data-i18n="app.cov.check">Links and messages</h3><p data-i18n="app.cov.checkBody">Paste anything you received. A rule engine and an AI analyst judge it together.</p></div><span class="tag tag--live" data-i18n="app.cov.live">Live</span></li>
+            <li><span class="cov__icon" aria-hidden="true"><svg><use href="/icons.svg#i-msg"/></svg></span><div><h3 data-i18n="app.nav.assistant">Assistant</h3><p data-i18n="app.cov.asstBody">Plain answers about a check, a worry, or how to lock down an account.</p></div><span class="tag tag--live" data-i18n="app.cov.live">Live</span></li>
+            <li><span class="cov__icon" aria-hidden="true"><svg><use href="/icons.svg#i-globe"/></svg></span><div><h3 data-i18n="area.browsing">Browsing</h3><p data-i18n="app.cov.browsingBody">A browser extension that warns you on the page itself.</p></div><span class="tag tag--plan" data-i18n="app.cov.planned">Planned</span></li>
+            <li><span class="cov__icon" aria-hidden="true"><svg><use href="/icons.svg#i-device"/></svg></span><div><h3 data-i18n="area.device">PC security</h3><p data-i18n="app.cov.deviceBody">A Windows agent that reads your PC's security logs.</p></div><span class="tag tag--plan" data-i18n="app.cov.planned">Planned</span></li>
+            <li><span class="cov__icon" aria-hidden="true"><svg><use href="/icons.svg#i-accounts"/></svg></span><div><h3 data-i18n="area.accounts">Accounts</h3><p data-i18n="app.cov.accountsBody">Read-only connections you approve, to spot strange sign-ins and hidden forwarding rules.</p></div><span class="tag tag--plan" data-i18n="app.cov.planned">Planned</span></li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- History -->
+      <section class="view" data-view="history" aria-labelledby="hist-title" hidden>
+        <header class="view__head view__head--row">
+          <div class="view__text">
+            <h1 id="hist-title" tabindex="-1" data-i18n="app.hist.title">History</h1>
+            <p data-i18n="app.hist.lede">Your past checks. They are kept only in this browser; OPVORA's servers keep nothing.</p>
+          </div>
+          <button class="btn btn--line btn--sm" id="hist-clear" type="button"><svg aria-hidden="true"><use href="/icons.svg#i-trash"/></svg><span></span></button>
+        </header>
+        <div class="hist" id="hist">
+          <div class="panel hist__panel"><ol class="hist__list" id="hist-list"></ol></div>
+          <div class="panel hist__detail" id="hist-detail" aria-live="polite"></div>
+        </div>
+        <div class="panel hist__empty" id="hist-empty" hidden></div>
+      </section>
+
+      <!-- Assistant -->
+      <section class="view view--assistant" data-view="assistant" aria-labelledby="asst-title" hidden>
+        <header class="view__head view__head--row">
+          <div class="view__text">
+            <h1 id="asst-title" tabindex="-1" data-i18n="app.asst.title">Assistant</h1>
+            <p data-i18n="app.asst.lede">Ask about a check, a message that worries you, or how to lock down an account. It can read your recent checks in this browser.</p>
+          </div>
+          <button class="btn btn--line btn--sm" id="asst-clear" type="button"><svg aria-hidden="true"><use href="/icons.svg#i-reset"/></svg><span data-i18n="chat.clear">New conversation</span></button>
+        </header>
+        <div class="panel convo">
+          <div class="chat__log" id="asst-log" aria-live="polite"></div>
+          <div class="chat__suggest" id="asst-suggest">
+            <p class="chat__suggest-label" data-i18n="chat.try">Try asking</p>
+            <button type="button" data-i18n="app.asst.q1">Is my latest check something to worry about?</button>
+            <button type="button" data-i18n="chat.q2">Someone is threatening me online. What do I do?</button>
+            <button type="button" data-i18n="chat.q3">How do I turn on 2-step verification?</button>
+          </div>
+          <form class="chat__form" id="asst-form">
+            <label class="sr-only" for="asst-input" data-i18n="chat.inputLabel">Message the assistant</label>
+            <textarea id="asst-input" rows="1" autocomplete="off" maxlength="1500" placeholder="Ask about a check or a message…" data-i18n-attr="placeholder:app.asst.placeholder"></textarea>
+            <button class="btn btn--ink btn--icon" id="asst-send" type="submit" aria-label="Send" data-i18n-attr="aria-label:chat.send"><svg aria-hidden="true"><use href="/icons.svg#i-send"/></svg></button>
+          </form>
+          <p class="chat__hint" data-i18n="app.asst.hint">Never share passwords or codes here. The assistant can be wrong; in an emergency, call 911.</p>
+        </div>
+      </section>
+
+      <!-- First aid -->
+      <section class="view" data-view="help" aria-labelledby="help-title" hidden>
+        <header class="view__head">
+          <h1 id="help-title" tabindex="-1" data-i18n="app.help.title">First aid</h1>
+          <p data-i18n="app.help.lede">Something already happened? Pick what fits. Each guide lists what to do first, in order.</p>
+        </header>
+        <div class="sosband">
+          <p class="sosband__title" data-i18n="sos.title">In danger right now? (Mexico)</p>
+          <a href="tel:911"><svg aria-hidden="true"><use href="/icons.svg#i-phone"/></svg><b>911</b><span data-i18n="sos.911">Emergencies</span></a>
+          <a href="tel:088"><svg aria-hidden="true"><use href="/icons.svg#i-phone"/></svg><b>088</b><span data-i18n="sos.088">Policía Cibernética, online threats and extortion</span></a>
+        </div>
+        <div class="guides" id="guides"></div>
+      </section>
+
+      <!-- Settings -->
+      <section class="view" data-view="settings" aria-labelledby="set-title" hidden>
+        <header class="view__head">
+          <h1 id="set-title" tabindex="-1" data-i18n="app.set.title">Settings</h1>
+          <p data-i18n="app.set.lede">Everything here is saved in this browser only.</p>
+        </header>
+        <div class="settings">
+          <section class="set" aria-labelledby="set-look">
+            <h2 id="set-look" data-i18n="app.set.look">Appearance</h2>
+            <div class="set__row">
+              <div class="set__text"><h3 data-i18n="app.set.lang">Language</h3></div>
+              <div class="seg seg--lang" role="group" aria-label="Language / Idioma">
+                <button type="button" data-lang-set="en" aria-pressed="true" lang="en">English</button><button type="button" data-lang-set="es" aria-pressed="false" lang="es">Español</button>
+              </div>
+            </div>
+            <div class="set__row">
+              <div class="set__text"><h3 data-i18n="app.set.theme">Theme</h3><p data-i18n="app.set.themeBody">Auto follows your device.</p></div>
+              <div class="seg seg--theme" role="radiogroup" aria-label="Color theme" data-i18n-attr="aria-label:theme.label">
+                <button type="button" role="radio" data-theme-set="system" aria-checked="true" aria-label="Auto" data-i18n-attr="aria-label:theme.auto"><svg aria-hidden="true"><use href="/icons.svg#i-auto"/></svg><span data-i18n="theme.auto">Auto</span></button><button type="button" role="radio" data-theme-set="light" aria-checked="false" aria-label="Light" data-i18n-attr="aria-label:theme.light"><svg aria-hidden="true"><use href="/icons.svg#i-sun"/></svg><span data-i18n="theme.light">Light</span></button><button type="button" role="radio" data-theme-set="dark" aria-checked="false" aria-label="Dark" data-i18n-attr="aria-label:theme.dark"><svg aria-hidden="true"><use href="/icons.svg#i-moon"/></svg><span data-i18n="theme.dark">Dark</span></button>
+              </div>
+            </div>
+          </section>
+
+          <section class="set" aria-labelledby="set-data">
+            <h2 id="set-data" data-i18n="app.set.data">Your data</h2>
+            <div class="set__row">
+              <div class="set__text"><h3 id="keep-label" data-i18n="app.set.keep">Keep a history of my checks</h3><p id="keep-desc" data-i18n="app.set.keepBody">Saved only in this browser and never sent to OPVORA. Turning it off keeps what is already saved until you clear it.</p></div>
+              <input class="switch" type="checkbox" role="switch" id="keep-hist" aria-labelledby="keep-label" aria-describedby="keep-desc">
+            </div>
+            <div class="set__row">
+              <div class="set__text"><h3 data-i18n="app.set.clear">Clear history</h3><p id="hist-size"></p></div>
+              <button class="btn btn--line btn--sm" id="set-clear" type="button"><svg aria-hidden="true"><use href="/icons.svg#i-trash"/></svg><span></span></button>
+            </div>
+            <div class="set__row">
+              <div class="set__text"><h3 data-i18n="app.set.reset">Reset OPVORA on this device</h3><p data-i18n="app.set.resetBody">Removes your history, language, theme and the welcome note from this browser.</p></div>
+              <button class="btn btn--line btn--sm" id="set-reset" type="button"><svg aria-hidden="true"><use href="/icons.svg#i-reset"/></svg><span></span></button>
+            </div>
+          </section>
+
+          <section class="set" aria-labelledby="set-about">
+            <h2 id="set-about" data-i18n="app.set.about">About this beta</h2>
+            <div class="set__row">
+              <div class="set__text"><h3 data-i18n="app.set.version">Version</h3><p data-i18n="app.set.versionBody">Public beta. Accounts and connections to your browser, PC and accounts come in later betas.</p></div>
+              <span class="beta" data-version>beta · v0.1.0</span>
+            </div>
+            <div class="set__row">
+              <div class="set__text"><h3 data-i18n="app.set.engine">How checks are made</h3><p data-i18n="app.set.engineBody">29 rule checks plus Llama 3.3 70B on Cloudflare Workers AI. If the AI is unavailable, the result says it is rule-based.</p></div>
+              <span class="status" data-ai-status role="status"><span class="dot" aria-hidden="true"></span><span>AI online</span></span>
+            </div>
+            <nav class="set__links" aria-label="More" data-i18n-attr="aria-label:app.set.more">
+              <a href="/"><span data-i18n="app.set.showcase">Showcase and live demo</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+              <a href="/privacy"><span data-i18n="app.set.privacy">Privacy</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+              <a href="/terms"><span data-i18n="app.set.terms">Terms of use</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+            </nav>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

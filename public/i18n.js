@@ -68,7 +68,10 @@ const ES_STATIC = {
   'feed.start': 'Iniciar simulación',
   'method.cap': 'Las etiquetas bajo cada paso siguen a la Lámina I, el mensaje de amenaza, por todo el proceso. Los pesos de las reglas son los valores reales del motor.',
   'sos.title': '¿En peligro ahora? (México)', 'sos.911': 'Emergencias', 'sos.088': 'Policía Cibernética, amenazas y extorsión en línea',
-  'footer.body': 'Demo para una competencia. El texto que escaneas o envías al asistente lo procesa Cloudflare Workers AI y OPVORA no lo guarda. Si alguien amenaza tu seguridad, llama al 911.',
+  'footer.body': 'Beta pública de OPVORA. El texto que revisas o envías al asistente lo procesa Cloudflare Workers AI y OPVORA no lo guarda. La consola de esta página reproduce alertas simuladas. Si alguien amenaza tu seguridad, llama al 911.',
+  'footer.app': 'Abrir la app', 'footer.privacy': 'Privacidad', 'footer.terms': 'Términos',
+  'nav.start': 'Empezar', 'hero.start': 'Empezar', 'cta.start': 'Empieza con la beta',
+  'cta.ver': 'Revisiones, un historial privado en tu dispositivo, el asistente y guías de primeros auxilios.',
   'chat.title': 'Asistente OPVORA', 'chat.status': 'En línea, puede ver tu consola',
   'chat.clear': 'Nueva conversación', 'chat.close': 'Cerrar el asistente',
   'chat.try': 'Prueba preguntar',
@@ -154,6 +157,14 @@ function applyStatic() {
     }
   }
   document.querySelectorAll('[data-lang-set]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.langSet === lang)));
+}
+
+/** Pages register their own strings (the app, the legal pages). Re-applies Spanish if it is already on. */
+export function addStrings({ esStatic = {}, en = {}, es = {} }) {
+  Object.assign(ES_STATIC, esStatic);
+  Object.assign(JS.en, en);
+  Object.assign(JS.es, es);
+  if (lang === 'es') applyStatic();
 }
 
 export function setLang(next) {

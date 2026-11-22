@@ -19,7 +19,7 @@ export async function onRequestPost({ request, env }) {
 
   const context = clip(body?.context, 2500);
   const messages = [
-    { role: 'system', content: `${CHAT_SYSTEM}\n\nDashboard context (simulated demo data):\n<context>\n${context || 'No events analyzed yet.'}\n</context>` },
+    { role: 'system', content: `${CHAT_SYSTEM}\n\nPage context:\n<context>\n${context || 'Nothing analyzed yet.'}\n</context>` },
     ...history,
   ];
 

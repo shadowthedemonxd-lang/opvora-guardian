@@ -1,38 +1,15 @@
+// Landing page (showcase): Plate I, the simulated console, the scanner, the assistant panel and the scroll motion.
 import { SAMPLE_EVENTS, EVENT_ES } from './events.js';
-import { t, getLang, setLang, onLang } from './i18n.js';
+import { t, getLang, onLang } from './i18n.js';
+import { $, h, icon, sevChip, sevLabel, emptyState, reduceMotion, thinking, md, streamChat, initPrefs, EXAMPLES, EX_LABEL, analyze as apiAnalyze, renderAnalysis as cardOf } from './shared.js';
 
-const $ = (s, root = document) => root.querySelector(s);
 const SEV_WEIGHT = { critical: 26, high: 15, medium: 7, low: 2, none: 0 };
 const AREA_ICON = { browsing: 'i-globe', device: 'i-device', accounts: 'i-accounts' };
 const AREA_EN = { browsing: 'Browsing', device: 'PC security', accounts: 'Accounts' }; // what the AI and chat context receive
-const sevLabel = (s) => t(`sev.${s}`);
 const areaLabel = (a) => t(`area.${a}`);
 const evTitle = (ev) => (getLang() === 'es' ? EVENT_ES[SAMPLE_EVENTS.indexOf(ev)]?.[1] : null) || ev.title;
 const evSource = (ev) => (getLang() === 'es' ? EVENT_ES[SAMPLE_EVENTS.indexOf(ev)]?.[0] : null) || ev.source;
-const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/** Tiny DOM builder. Strings become text nodes, so model output can never inject HTML. */
-function h(tag, attrs = {}, ...kids) {
-  const el = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) {
-    if (v == null || v === false) continue;
-    if (k === 'class') el.className = v;
-    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
-    else el.setAttribute(k, v);
-  }
-  for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid);
-  return el;
-}
-const icon = (id) => {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('aria-hidden', 'true');
-  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-  use.setAttribute('href', `#${id}`);
-  svg.append(use);
-  return svg;
-};
-const sevChip = (sev, label) => h('span', { class: 'sev', 'data-sev': sev }, label || sevLabel(sev));
-const emptyState = (title, body) => h('div', { class: 'empty' }, h('p', { class: 'empty__title' }, title), h('p', {}, body));
+initPrefs();
 
 /* ---------- smooth scroll ---------- */
 let lenis = null;
@@ -49,50 +26,13 @@ function paintPill() {
   livePill.lastChild.textContent = t(aiUp ? 'status.online' : 'status.fallback');
 }
 async function analyze(kind, content) {
-  const res = await fetch('/api/analyze', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ kind, content, lang: getLang() }) });
-  const data = await res.json().catch(() => ({ error: 'Unexpected server response.' }));
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+  const data = await apiAnalyze(kind, content);
   aiUp = data.source === 'ai';
   paintPill();
   return data;
 }
-
-/* ---------- analysis card (shared by console + scanner) ---------- */
-function thinking(container, label) {
-  container.replaceChildren(h('div', { class: 'thinking' },
-    h('p', { class: 'thinking__label' }, label),
-    h('div', { class: 'shimmer', style: 'width:60%' }), h('div', { class: 'shimmer' }), h('div', { class: 'shimmer', style: 'width:85%' }),
-  ));
-}
-
-function renderAnalysis(container, r, { raw, meta, extra, ask } = {}) {
-  const fromAI = r.source === 'ai';
-  const askBtn = h('button', { class: 'btn btn--line btn--sm', type: 'button', onclick: () => { openChat(true); send(ask || t('an.askPrompt', { title: r.title, sev: sevLabel(r.severity), summary: r.summary })); } },
-    icon('i-spark'), t('an.ask'));
-  const card = h('article', { class: 'analysis', 'data-sev': r.severity },
-    h('div', { class: 'analysis__top' },
-      sevChip(r.severity, r.verdict === 'unverified' ? t('sev.unverified') : null),
-      h('span', { class: 'tag' }, r.category),
-      meta && h('span', { class: 'tag' }, meta),
-      h('span', { class: 'analysis__src' }, icon(fromAI ? 'i-spark' : 'i-shield'), fromAI ? `${r.model}, ${(r.ms / 1000).toFixed(1)} s` : t('an.rules')),
-    ),
-    h('h3', {}, r.title),
-    h('div', { class: 'meter' }, t('an.risk'), h('div', { class: 'meter__bar' }, h('i')), h('b', {}, `${r.risk_score}/100`)),
-    h('p', { class: 'analysis__summary' }, r.summary),
-    r.explanation && h('p', { class: 'analysis__explain' }, r.explanation),
-    !fromAI && h('p', { class: 'note' }, t('an.note')),
-    h('div', { class: 'cols' },
-      h('div', { class: 'block' }, h('h4', {}, t('an.noticed')), h('ul', { class: 'flags' }, r.indicators.map((x) => h('li', {}, x)))),
-      h('div', { class: 'block' }, h('h4', {}, t('an.todo')), h('ul', { class: 'actions' }, r.actions.map((x, i) => h('li', {}, h('span', {}, String(i + 1)), h('span', {}, x))))),
-    ),
-    h('div', { class: 'block' }, h('h4', {}, t('an.ruleScore', { n: r.rule_score })),
-      h('div', { class: 'chips' }, r.signals.length ? r.signals.map((s) => h('span', { class: 'chip' }, s.label)) : h('span', { class: 'chip' }, t('an.noRule')))),
-    raw && h('details', { class: 'block' }, h('summary', {}, t('an.raw')), h('pre', { class: 'raw' }, raw)),
-    h('div', { class: 'analysis__foot' }, extra, askBtn),
-  );
-  container.replaceChildren(card);
-  requestAnimationFrame(() => requestAnimationFrame(() => { card.querySelector('.meter__bar i').style.width = `${r.risk_score}%`; }));
-}
+const askAbout = (prompt) => { openChat(true); send(prompt); };
+const renderAnalysis = (container, r, opts = {}) => cardOf(container, r, { ...opts, onAsk: askAbout });
 
 /* ---------- console simulation ---------- */
 const feedEl = $('#feed'), detailEl = $('#detail'), metaEl = $('#feed-meta');
@@ -222,23 +162,6 @@ document.querySelectorAll('[data-start-demo]').forEach((a) => a.addEventListener
 }));
 
 /* ---------- scanner ---------- */
-const EXAMPLES = {
-  url: [
-    ['ex.bank', 'http://bancon0va-secure-login.top/acceso?id=88213'],
-    ['ex.brand', 'https://paypal.com.account-review.xyz/signin'],
-    ['ex.normalSite', 'https://www.wikipedia.org/'],
-  ],
-  message: [
-    ['ex.package', { en: 'Your package could not be delivered. Pay the 25 MXN customs fee within 24 hours or it will be returned: http://bit.ly/dhl-mx-pago', es: 'Tu paquete no pudo ser entregado. Paga la cuota aduanal de 25 MXN en las próximas 24 horas o será devuelto: http://bit.ly/dhl-mx-pago' }],
-    ['ex.support', { en: 'Hello, this is the Security Team. We detected unusual activity and your account will be suspended today. To keep it, reply with the 6-digit verification code we just sent to your phone.', es: 'Hola, somos el Equipo de Seguridad. Detectamos actividad inusual y tu cuenta será suspendida hoy. Para conservarla, responde con el código de verificación de 6 dígitos que enviamos a tu teléfono.' }],
-    ['ex.threat', { en: 'I know where you live. Send me your home address and a photo of your ID by tonight or you will regret it.', es: 'Sé dónde vives. Mándame tu dirección y una foto de tu INE antes de esta noche o te vas a arrepentir.' }],
-    ['ex.normalMsg', { en: 'Hi! Are we still on for dinner on Friday at 8? I booked the table under my name.', es: '¡Hola! ¿Sigue en pie la cena del viernes a las 8? Reservé la mesa a mi nombre.' }],
-  ],
-};
-const EX_LABEL = {
-  en: { 'ex.bank': 'Look-alike bank', 'ex.brand': 'Brand in disguise', 'ex.normalSite': 'Normal site', 'ex.package': 'Package scam SMS', 'ex.support': 'Fake support email', 'ex.threat': 'Threat demanding info', 'ex.normalMsg': 'Normal message' },
-  es: { 'ex.bank': 'Banco imitado', 'ex.brand': 'Marca disfrazada', 'ex.normalSite': 'Sitio normal', 'ex.package': 'SMS de paquete falso', 'ex.support': 'Correo de soporte falso', 'ex.threat': 'Amenaza pidiendo datos', 'ex.normalMsg': 'Mensaje normal' },
-};
 let lastScan = null;
 const scanForm = $('#scan-form'), scanInput = $('#scan-input'), scanBtn = $('#scan-btn'), scanOut = $('#scan-result'), examplesEl = $('#examples');
 let scanKind = 'url';
@@ -333,36 +256,15 @@ function resetChat() {
 }
 $('#chat-clear').addEventListener('click', () => { resetChat(); chatInput.focus(); });
 
-/** Safe mini-markdown: escape first, then allow **bold**, `code`, headings and lists. */
-function md(text) {
-  const esc = text.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const inline = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code>$1</code>');
-  let html = '', list = null;
-  const close = () => { if (list) { html += `</${list}>`; list = null; } };
-  for (const line of esc.split('\n')) {
-    const ul = line.match(/^\s*[-*•]\s+(.*)/), ol = line.match(/^\s*\d+[.)]\s+(.*)/), hd = line.match(/^\s*#{1,4}\s+(.*)/);
-    const item = ul || ol;
-    if (item) {
-      const want = ol ? 'ol' : 'ul';
-      if (list !== want) { close(); html += `<${want}>`; list = want; }
-      html += `<li>${inline(item[1])}</li>`;
-      continue;
-    }
-    close();
-    if (hd) html += `<p class="msg__h">${inline(hd[1])}</p>`;
-    else if (line.trim()) html += `<p>${inline(line)}</p>`;
-  }
-  close();
-  return html;
-}
-
+// The server keeps only the first 2500 characters, so the language and the user's own scan go first; the long console list goes last.
 function consoleContext() {
   const done = state.items.filter((i) => i.result);
-  let ctx = done.length
+  let ctx = getLang() === 'es' ? 'The user is reading the site in Spanish; answer in Mexican Spanish unless they write in another language.\n' : '';
+  if (lastScan) ctx += `Latest scanner result (real, user-pasted): rated ${lastScan.r.severity} (${lastScan.r.risk_score}/100), "${lastScan.r.title}". ${lastScan.r.summary}\nPasted text: ${lastScan.content}\n`;
+  ctx += 'Showcase console (SIMULATED sample alerts, not the user\'s real data). ';
+  ctx += done.length
     ? `Guardian score ${shownScore}/100.\n` + done.slice(0, 12).map((i) => `- [${i.result.severity}${i.resolved ? ', handled' : ''}] ${AREA_EN[i.ev.area]}: ${i.ev.title}. AI: ${i.result.summary}`).join('\n')
     : `Guardian score ${shownScore}. No console events analyzed yet; the simulation has not started.`;
-  if (lastScan) ctx += `\nLatest scanner result (real, user-pasted): rated ${lastScan.r.severity} (${lastScan.r.risk_score}/100), "${lastScan.r.title}". ${lastScan.r.summary}\nPasted text: ${lastScan.content}`;
-  if (getLang() === 'es') ctx += '\nThe user is reading the site in Spanish; answer in Mexican Spanish unless they write in another language.';
   return ctx;
 }
 
@@ -380,31 +282,12 @@ async function send(text) {
   const bubble = h('div', { class: 'msg msg--ai' }, h('span', { class: 'typing', 'aria-label': t('chat.typing') }, h('i'), h('i'), h('i')));
   chatLog.append(aiRow(bubble));
   chatLog.scrollTop = chatLog.scrollHeight;
-  let answer = '';
   try {
-    const res = await fetch('/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: history, context: consoleContext() }) });
-    if (!res.ok || !res.body) throw new Error((await res.json().catch(() => ({}))).error || t('chat.down'));
-    const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
-    let buf = '';
-    for (;;) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      buf += value;
-      const lines = buf.split('\n');
-      buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data:')) continue;
-        const data = line.slice(5).trim();
-        if (data === '[DONE]') continue;
-        try {
-          const j = JSON.parse(data);
-          answer += j.response || j.choices?.[0]?.delta?.content || '';
-        } catch { /* partial keep-alive line */ }
-      }
-      if (answer) { bubble.innerHTML = md(answer); bubble.classList.add('cursor'); }
+    const answer = await streamChat(history, consoleContext(), (text) => {
+      bubble.innerHTML = md(text);
+      bubble.classList.add('cursor');
       chatLog.scrollTop = chatLog.scrollHeight;
-    }
-    if (!answer.trim()) throw new Error(t('chat.empty'));
+    });
     history.push({ role: 'assistant', content: answer });
   } catch (err) {
     history.pop();
@@ -420,35 +303,7 @@ async function send(text) {
 resetChat();
 detailEmpty();
 
-/* ---------- theme (Auto / Light / Dark) and language ---------- */
-const themeBtns = document.querySelectorAll('[data-theme-set]'), themeCycle = $('#theme-cycle');
-const THEME_ICON = { system: 'i-auto', light: 'i-sun', dark: 'i-moon' };
-let themeNow = 'system';
-function applyTheme(x) {
-  themeNow = x === 'light' || x === 'dark' ? x : 'system';
-  if (themeNow === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = themeNow;
-  themeBtns.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeSet === themeNow)));
-  paintThemeCycle();
-}
-// phones get one button that steps Auto → Light → Dark; its label reuses the (translated) labels of the full switch
-function paintThemeCycle() {
-  const seg = $('.seg--theme'), active = $(`[data-theme-set="${themeNow}"]`);
-  themeCycle.querySelector('use').setAttribute('href', `#${THEME_ICON[themeNow]}`);
-  themeCycle.setAttribute('aria-label', `${seg.getAttribute('aria-label')}: ${active.getAttribute('aria-label')}`);
-  themeCycle.title = themeCycle.getAttribute('aria-label');
-}
-function saveTheme(x) {
-  applyTheme(x);
-  try { localStorage.setItem('opvora-theme', themeNow); } catch { /* storage blocked */ }
-}
-let savedTheme = null;
-try { savedTheme = localStorage.getItem('opvora-theme'); } catch { /* storage blocked */ }
-applyTheme(savedTheme);
-themeBtns.forEach((b) => b.addEventListener('click', () => saveTheme(b.dataset.themeSet)));
-themeCycle.addEventListener('click', () => saveTheme({ system: 'light', light: 'dark', dark: 'system' }[themeNow]));
-onLang(paintThemeCycle);
-
-document.querySelectorAll('[data-lang-set]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.langSet)));
+/* ---------- language ---------- */
 function repaintLang() {
   paintPill();
   paintToggle();
@@ -459,7 +314,6 @@ function repaintLang() {
   drawLeaders();
 }
 onLang(repaintLang);
-if (getLang() !== 'en') repaintLang();
 
 /* ---------- keyboard: "/" jumps to the scanner ---------- */
 document.addEventListener('keydown', (e) => {
@@ -493,6 +347,7 @@ function drawLeaders() {
   leaders.replaceChildren(...parts);
 }
 drawLeaders();
+if (getLang() !== 'en') repaintLang(); // after drawLeaders' constants exist: it runs on a Spanish first load
 if (plateBody) new ResizeObserver(() => drawLeaders()).observe(plateBody);
 document.fonts?.ready.then(drawLeaders);
 

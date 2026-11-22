@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Privacy · OPVORA</title>
+  <meta name="description" content="What OPVORA does with the links and messages you check: what is sent, what is kept on your device, and what is never stored.">
+  <meta name="theme-color" content="#D4E35A" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17271D" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/pages.css">
+  <script>try { const t = localStorage.getItem('opvora-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; if (localStorage.getItem('opvora-lang') === 'es') document.documentElement.lang = 'es-MX'; } catch {}</script>
+  <script type="module" src="/page.js"></script>
+</head>
+<body>
+  <a class="skip" href="#doc" data-i18n="pg.skip">Skip to content</a>
+  <header class="pghead">
+    <div class="wrap pghead__inner">
+      <a class="brand" href="/" aria-label="OPVORA"><span class="brand__tile"><svg class="brand__mark" aria-hidden="true"><use href="/icons.svg#i-logo"/></svg></span><span class="brand__word">OPVORA</span></a>
+      <span class="beta" data-version>beta · v0.1.0</span>
+      <div class="seg seg--lang" role="group" aria-label="Language / Idioma"><button type="button" data-lang-set="en" aria-pressed="true" lang="en">EN</button><button type="button" data-lang-set="es" aria-pressed="false" lang="es">ES</button></div>
+      <div class="seg seg--theme" role="radiogroup" aria-label="Color theme" data-i18n-attr="aria-label:theme.label"><button type="button" role="radio" data-theme-set="system" aria-checked="true" aria-label="Auto" data-i18n-attr="aria-label:theme.auto" title="Auto"><svg aria-hidden="true"><use href="/icons.svg#i-auto"/></svg></button><button type="button" role="radio" data-theme-set="light" aria-checked="false" aria-label="Light" data-i18n-attr="aria-label:theme.light" title="Light"><svg aria-hidden="true"><use href="/icons.svg#i-sun"/></svg></button><button type="button" role="radio" data-theme-set="dark" aria-checked="false" aria-label="Dark" data-i18n-attr="aria-label:theme.dark" title="Dark"><svg aria-hidden="true"><use href="/icons.svg#i-moon"/></svg></button></div>
+      <div class="seg seg--cycle"><button type="button" id="theme-cycle"><svg aria-hidden="true"><use href="/icons.svg#i-auto"/></svg></button></div>
+      <a class="btn btn--ink btn--sm pghead__open" href="/app/" aria-label="Open the app" data-i18n-attr="aria-label:pg.open"><span data-i18n="pg.open">Open the app</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+    </div>
+  </header>
+
+  <main class="wrap doc" id="doc">
+    <article data-lang="en" lang="en">
+      <h1>Privacy</h1>
+      <p class="doc__meta">Last updated 22 November 2026 · Beta</p>
+      <p class="doc__lede">OPVORA is built to need as little of your data as possible. There are no accounts yet, no ads and no tracking. This page says exactly what happens to what you type.</p>
+
+      <h2>What you send</h2>
+      <ul>
+        <li>When you check a link or a message, or write to the assistant, the text goes to OPVORA's server on Cloudflare and to Cloudflare Workers AI, which runs the AI model (Llama 3.3 70B) that writes the answer.</li>
+        <li>OPVORA does not store that text, the verdict or the conversation on its servers. They are used to produce the answer and then discarded.</li>
+        <li>Cloudflare processes them as OPVORA's hosting and AI provider, under its own privacy policy.</li>
+      </ul>
+      <p class="callout"><strong>Never paste passwords, verification codes or card numbers.</strong> OPVORA never needs them to judge a message.</p>
+
+      <h2>What stays on your device</h2>
+      <ul>
+        <li>Your language and theme.</li>
+        <li>In the app, your history of checks while History is on (it is on by default). It holds what you pasted and its verdict, and it never leaves your browser.</li>
+        <li>You can turn History off, clear it, or reset everything in the app's <a href="/app/#/settings">Settings</a>. Clearing your browser's data for this site removes it too.</li>
+      </ul>
+
+      <h2>Technical data</h2>
+      <ul>
+        <li>To stop abuse, the server counts requests per IP address over one minute, in memory only. OPVORA does not write IP addresses to storage.</li>
+        <li>Like any host, Cloudflare may keep standard request logs.</li>
+        <li>Fonts load from Google Fonts, and the home page loads two animation libraries from cdnjs and unpkg, so those services see a request from your browser.</li>
+      </ul>
+
+      <h2>What OPVORA doesn't do</h2>
+      <ul>
+        <li>No accounts, no advertising, no analytics or tracking scripts, no tracking cookies.</li>
+        <li>No selling or sharing of what you check.</li>
+      </ul>
+
+      <h2>When this changes</h2>
+      <p>Accounts and connections to your browser, PC and online accounts are planned for later betas. They will need more data, so this page will be updated before they launch, with what each connection reads and why.</p>
+    </article>
+
+    <article data-lang="es" lang="es-MX">
+      <h1>Privacidad</h1>
+      <p class="doc__meta">Última actualización: 22 de noviembre de 2026 · Beta</p>
+      <p class="doc__lede">OPVORA está hecho para necesitar la menor cantidad posible de tus datos. Todavía no hay cuentas, ni anuncios, ni rastreo. Esta página explica exactamente qué pasa con lo que escribes.</p>
+
+      <h2>Lo que envías</h2>
+      <ul>
+        <li>Cuando revisas un enlace o un mensaje, o le escribes al asistente, el texto va al servidor de OPVORA en Cloudflare y a Cloudflare Workers AI, que ejecuta el modelo de IA (Llama 3.3 70B) que escribe la respuesta.</li>
+        <li>OPVORA no guarda ese texto, el veredicto ni la conversación en sus servidores. Se usan para producir la respuesta y luego se descartan.</li>
+        <li>Cloudflare los procesa como proveedor de hospedaje y de IA de OPVORA, bajo su propia política de privacidad.</li>
+      </ul>
+      <p class="callout"><strong>Nunca pegues contraseñas, códigos de verificación ni números de tarjeta.</strong> OPVORA nunca los necesita para juzgar un mensaje.</p>
+
+      <h2>Lo que se queda en tu dispositivo</h2>
+      <ul>
+        <li>Tu idioma y tu tema.</li>
+        <li>En la app, tu historial de revisiones mientras el Historial esté activado (viene activado). Guarda lo que pegaste y su veredicto, y nunca sale de tu navegador.</li>
+        <li>Puedes apagar el Historial, borrarlo o restablecer todo en los <a href="/app/#/settings">Ajustes</a> de la app. Borrar los datos de este sitio en tu navegador también lo elimina.</li>
+      </ul>
+
+      <h2>Datos técnicos</h2>
+      <ul>
+        <li>Para evitar abusos, el servidor cuenta las solicitudes por dirección IP durante un minuto, solo en memoria. OPVORA no guarda direcciones IP.</li>
+        <li>Como cualquier proveedor de hospedaje, Cloudflare puede conservar registros estándar de solicitudes.</li>
+        <li>Las fuentes se cargan desde Google Fonts, y la página de inicio carga dos bibliotecas de animación desde cdnjs y unpkg, así que esos servicios reciben una solicitud de tu navegador.</li>
+      </ul>
+
+      <h2>Lo que OPVORA no hace</h2>
+      <ul>
+        <li>No hay cuentas, ni publicidad, ni analítica o scripts de rastreo, ni cookies de rastreo.</li>
+        <li>No vende ni comparte lo que revisas.</li>
+      </ul>
+
+      <h2>Cuando esto cambie</h2>
+      <p>Las cuentas y las conexiones a tu navegador, tu PC y tus cuentas en línea están planeadas para próximas betas. Necesitarán más datos, así que esta página se actualizará antes de que salgan, explicando qué lee cada conexión y por qué.</p>
+    </article>
+  </main>
+
+  <footer class="pgfoot">
+    <div class="wrap pgfoot__inner">
+      <a href="/" data-i18n="pg.home">Home</a><a href="/app/" data-i18n="pg.app">App</a><a href="/privacy" data-i18n="pg.privacy">Privacy</a><a href="/terms" data-i18n="pg.terms">Terms</a>
+      <span class="beta" data-version>beta · v0.1.0</span>
+    </div>
+  </footer>
+</body>
+</html>

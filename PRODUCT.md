@@ -22,6 +22,11 @@ Two independent layers judge every item: a deterministic rule engine (29 checks)
 
 ## Operating Context
 
+Release: public beta v0.1.0. The showcase at `/` stays; "Get started" leads to the app at `/app/`.
+
+- App (`/app/`, Operate mode): Check (link or message), History kept only in the browser (on by default, can be turned off or cleared), Assistant that sees the user's own recent checks, First aid guides for things that already happened, Settings (language, theme, data, about). Coverage list marks Browsing, PC security and Accounts as planned.
+- Privacy and Terms pages: plain-language beta drafts in EN and ES. A contact address still needs to be added before a wide launch.
+- Next stage (not built): accounts, and read-only connections to the browser, PC and online accounts.
 - Guardian console: 12 scripted sample alerts (staged account takeover) stream into the real AI analyst; a Guardian score and three area tiles (Browsing, PC security, Accounts) update.
 - Scanner: paste a link or a message, get a verdict with rule hits plus the AI explanation.
 - Assistant chat panel that can see the console's analyzed events and the latest scan.
@@ -31,7 +36,7 @@ Two independent layers judge every item: a deterministic rule engine (29 checks)
 
 - Static HTML/CSS/JS in `public/`, no build step; Cloudflare Pages Functions `functions/api/analyze.js` and `chat.js` (streaming).
 - OPVORA is NOT connected to the visitor's device or accounts. The console feed is simulated; the analysis is real. Every surface must keep this honest labeling.
-- Nothing pasted is stored. Never invite users to paste passwords.
+- Nothing pasted is stored on OPVORA's servers. The app's History is kept only in the user's browser and every surface that mentions it says so. Never invite users to paste passwords.
 - Copy must be available in English and Spanish with a language switch (EN / ES).
 
 ## Brand Commitments

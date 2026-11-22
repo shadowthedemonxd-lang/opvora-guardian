@@ -11,42 +11,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
   <link rel="stylesheet" href="/styles.css">
-  <script>try { const t = localStorage.getItem('opvora-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}</script>
+  <script>try { const t = localStorage.getItem('opvora-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; if (localStorage.getItem('opvora-lang') === 'es') document.documentElement.lang = 'es-MX'; } catch {}</script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script type="module" src="/app.js"></script>
+  <script type="module" src="/landing.js"></script>
 </head>
 <body>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z"/></g></symbol>
-    <symbol id="i-device" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></g></symbol>
-    <symbol id="i-accounts" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M17 11.5a3 3 0 1 0 0-6M19 14.8c1.4.9 2.2 2.6 2.5 5.2"/></g></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 2.8 19.6 5.5v5.8c0 4.7-3.2 8-7.6 9.9-4.4-1.9-7.6-5.2-7.6-9.9V5.5L12 2.8Z"/></symbol>
-    <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></symbol>
-    <symbol id="i-pause" viewBox="0 0 24 24"><g fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></g></symbol>
-    <symbol id="i-reset" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></g></symbol>
-    <symbol id="i-send" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 12 20 4l-4.5 16-3.5-6.5L4 12Zm8 1.5L20 4"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="m6 6 12 12M18 6 6 18"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
-    <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5c.5 4.6 2.9 7 9.5 9.5-6.6 2.5-9 4.9-9.5 9.5-.5-4.6-2.9-7-9.5-9.5 6.6-2.5 9-4.9 9.5-9.5Z"/></symbol>
-    <symbol id="i-link" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></g></symbol>
-    <symbol id="i-msg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 5h16v11H9l-5 4V5Z"/></symbol>
-    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-5 5 5-5 5"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></g></symbol>
-    <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></symbol>
-    <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10Z"/></symbol>
-    <symbol id="i-auto" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path fill="currentColor" stroke="none" d="M12 3.5a8.5 8.5 0 0 1 0 17Z"/></g></symbol>
-    <symbol id="i-logo" viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round" d="M24 5.5 39.5 11v11.6c0 9.4-6.4 16-15.5 19.4C14.9 38.6 8.5 32 8.5 22.6V11L24 5.5Z"/><circle cx="24" cy="22.5" r="7.2" fill="none" stroke="var(--ring)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="36 9.3" transform="rotate(-50 24 22.5)"/><circle cx="24" cy="22.5" r="2.4" fill="var(--ring)"/></symbol>
-  </svg>
-
   <a class="skip" href="#console" data-i18n="skip">Skip to the console</a>
 
   <header class="nav">
     <div class="wrap nav__inner">
       <a class="brand" href="#top" aria-label="OPVORA">
-        <span class="brand__tile"><svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg></span>
+        <span class="brand__tile"><svg class="brand__mark" aria-hidden="true"><use href="/icons.svg#i-logo"/></svg></span>
         <span class="brand__word">OPVORA</span>
       </a>
       <nav class="nav__links" aria-label="Sections">
@@ -61,10 +40,11 @@
         <button type="button" data-lang-set="en" aria-pressed="true" lang="en">EN</button><button type="button" data-lang-set="es" aria-pressed="false" lang="es">ES</button>
       </div>
       <div class="seg seg--theme" role="radiogroup" aria-label="Color theme" data-i18n-attr="aria-label:theme.label">
-        <button type="button" role="radio" data-theme-set="system" aria-checked="true" aria-label="Auto" data-i18n-attr="aria-label:theme.auto" title="Auto"><svg aria-hidden="true"><use href="#i-auto"/></svg></button><button type="button" role="radio" data-theme-set="light" aria-checked="false" aria-label="Light" data-i18n-attr="aria-label:theme.light" title="Light"><svg aria-hidden="true"><use href="#i-sun"/></svg></button><button type="button" role="radio" data-theme-set="dark" aria-checked="false" aria-label="Dark" data-i18n-attr="aria-label:theme.dark" title="Dark"><svg aria-hidden="true"><use href="#i-moon"/></svg></button>
+        <button type="button" role="radio" data-theme-set="system" aria-checked="true" aria-label="Auto" data-i18n-attr="aria-label:theme.auto" title="Auto"><svg aria-hidden="true"><use href="/icons.svg#i-auto"/></svg></button><button type="button" role="radio" data-theme-set="light" aria-checked="false" aria-label="Light" data-i18n-attr="aria-label:theme.light" title="Light"><svg aria-hidden="true"><use href="/icons.svg#i-sun"/></svg></button><button type="button" role="radio" data-theme-set="dark" aria-checked="false" aria-label="Dark" data-i18n-attr="aria-label:theme.dark" title="Dark"><svg aria-hidden="true"><use href="/icons.svg#i-moon"/></svg></button>
       </div>
-      <div class="seg seg--cycle"><button type="button" id="theme-cycle"><svg aria-hidden="true"><use href="#i-auto"/></svg></button></div>
-      <button class="btn btn--ink btn--sm nav__ask" id="chat-open" type="button" aria-controls="chat" aria-expanded="false"><svg aria-hidden="true"><use href="#i-msg"/></svg><span data-i18n="nav.ask">Ask OPVORA</span></button>
+      <div class="seg seg--cycle"><button type="button" id="theme-cycle"><svg aria-hidden="true"><use href="/icons.svg#i-auto"/></svg></button></div>
+      <button class="btn btn--line btn--sm btn--icon nav__ask" id="chat-open" type="button" aria-controls="chat" aria-expanded="false" title="Ask OPVORA" data-i18n-attr="title:nav.ask"><svg aria-hidden="true"><use href="/icons.svg#i-msg"/></svg><span class="sr-only" data-i18n="nav.ask">Ask OPVORA</span></button>
+      <a class="btn btn--ink btn--sm nav__start" href="/app/"><span data-i18n="nav.start">Get started</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
     </div>
   </header>
 
@@ -86,20 +66,24 @@
           <form class="identify" id="identify-form">
             <label class="identify__label" for="identify-input" data-i18n="hero.label">Paste a link or a message</label>
             <div class="identify__row">
-              <svg class="identify__icon" aria-hidden="true"><use href="#i-search"/></svg>
+              <svg class="identify__icon" aria-hidden="true"><use href="/icons.svg#i-search"/></svg>
               <input id="identify-input" type="text" autocomplete="off" spellcheck="false" maxlength="4000" placeholder="https://… or the message text" data-i18n-attr="placeholder:hero.placeholder">
-              <button class="btn btn--ink" type="submit"><span data-i18n="hero.submit">Identify</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+              <button class="btn btn--ink" type="submit"><span data-i18n="hero.submit">Identify</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></button>
             </div>
-            <p class="identify__note"><svg aria-hidden="true"><use href="#i-shield"/></svg><span data-i18n="hero.note">Nothing is stored. Never paste passwords.</span></p>
+            <p class="identify__note"><svg aria-hidden="true"><use href="/icons.svg#i-shield"/></svg><span data-i18n="hero.note">Nothing is stored. Never paste passwords.</span></p>
           </form>
-          <a class="textlink" href="#console" data-start-demo><svg aria-hidden="true"><use href="#i-play"/></svg><span data-i18n="hero.demo">Watch the live console</span></a>
+          <div class="cover__next">
+            <a class="btn btn--ink" href="/app/"><span data-i18n="hero.start">Get started</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+            <span class="beta" data-version>beta · v0.1.0</span>
+            <a class="textlink" href="#console" data-start-demo><svg aria-hidden="true"><use href="/icons.svg#i-play"/></svg><span data-i18n="hero.demo">Watch the live console</span></a>
+          </div>
         </div>
 
         <figure class="plate" id="plate" aria-labelledby="plate-cap">
           <figcaption class="plate__cap" id="plate-cap"><span data-i18n="plate.cap">Plate I · Threatening message</span><i class="plate__latin">Extortio minax</i></figcaption>
           <div class="plate__body">
             <div class="specimen">
-              <p class="specimen__from"><svg aria-hidden="true"><use href="#i-msg"/></svg><span data-i18n="plate.from">Unknown number</span><span class="mono">21:47</span></p>
+              <p class="specimen__from"><svg aria-hidden="true"><use href="/icons.svg#i-msg"/></svg><span data-i18n="plate.from">Unknown number</span><span class="mono">21:47</span></p>
               <p class="specimen__msg" data-i18n="plate.msg"><mark class="mk" data-n="1">I know where you live&#8288;<i class="pin" aria-hidden="true">1</i></mark>. Send me <mark class="mk" data-n="2">your home address and a photo of your ID&#8288;<i class="pin" aria-hidden="true">2</i></mark> <mark class="mk" data-n="3">by tonight&#8288;<i class="pin" aria-hidden="true">3</i></mark> or you will regret it.</p>
               <p class="scanread"><i aria-hidden="true"></i><span data-i18n="plate.found">3 marks found</span></p>
             </div>
@@ -150,8 +134,8 @@
             <p data-i18n="console.lede">Twelve alerts from a staged account takeover play back in order. Each one goes to the AI analyst as raw text, and it decides the severity on its own.</p>
           </div>
           <div class="controls">
-            <button class="btn btn--lichen" id="sim-toggle" type="button"><svg aria-hidden="true"><use href="#i-play"/></svg><span>Start simulation</span></button>
-            <button class="btn btn--ghost-inv btn--icon" id="sim-reset" type="button" aria-label="Reset the simulation" data-i18n-attr="aria-label:console.reset;title:console.reset" title="Reset the simulation"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
+            <button class="btn btn--lichen" id="sim-toggle" type="button"><svg aria-hidden="true"><use href="/icons.svg#i-play"/></svg><span>Start simulation</span></button>
+            <button class="btn btn--ghost-inv btn--icon" id="sim-reset" type="button" aria-label="Reset the simulation" data-i18n-attr="aria-label:console.reset;title:console.reset" title="Reset the simulation"><svg aria-hidden="true"><use href="/icons.svg#i-reset"/></svg></button>
           </div>
         </header>
 
@@ -168,9 +152,9 @@
               </div>
             </div>
             <div class="areas" id="areas">
-              <div class="area" data-area="browsing"><svg aria-hidden="true"><use href="#i-globe"/></svg><div><h3 data-i18n="area.browsing">Browsing</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
-              <div class="area" data-area="device"><svg aria-hidden="true"><use href="#i-device"/></svg><div><h3 data-i18n="area.device">PC security</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
-              <div class="area" data-area="accounts"><svg aria-hidden="true"><use href="#i-accounts"/></svg><div><h3 data-i18n="area.accounts">Accounts</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
+              <div class="area" data-area="browsing"><svg aria-hidden="true"><use href="/icons.svg#i-globe"/></svg><div><h3 data-i18n="area.browsing">Browsing</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
+              <div class="area" data-area="device"><svg aria-hidden="true"><use href="/icons.svg#i-device"/></svg><div><h3 data-i18n="area.device">PC security</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
+              <div class="area" data-area="accounts"><svg aria-hidden="true"><use href="/icons.svg#i-accounts"/></svg><div><h3 data-i18n="area.accounts">Accounts</h3><p class="area__status">No threats</p></div><span class="area__count">0</span></div>
             </div>
           </div>
 
@@ -181,7 +165,7 @@
               <div class="empty">
                 <p class="empty__title" data-i18n="feed.emptyTitle">No alerts yet</p>
                 <p data-i18n="feed.emptyBody">Stream the twelve sample alerts into the analyst and watch the score react.</p>
-                <button class="btn btn--ink btn--sm" type="button" data-sim-start><svg aria-hidden="true"><use href="#i-play"/></svg><span data-i18n="feed.start">Start simulation</span></button>
+                <button class="btn btn--ink btn--sm" type="button" data-sim-start><svg aria-hidden="true"><use href="/icons.svg#i-play"/></svg><span data-i18n="feed.start">Start simulation</span></button>
               </div>
             </div>
             <div class="detail" id="detail" aria-live="polite"></div>
@@ -203,8 +187,8 @@
         <div class="scan">
           <form class="scan__form" id="scan-form">
             <div class="tabs" role="tablist" aria-label="What are you checking?">
-              <button type="button" role="tab" class="tab" aria-selected="true" data-kind="url"><svg aria-hidden="true"><use href="#i-link"/></svg><span data-i18n="scan.link">Link</span></button>
-              <button type="button" role="tab" class="tab" aria-selected="false" data-kind="message"><svg aria-hidden="true"><use href="#i-msg"/></svg><span data-i18n="scan.message">Message</span></button>
+              <button type="button" role="tab" class="tab" aria-selected="true" data-kind="url"><svg aria-hidden="true"><use href="/icons.svg#i-link"/></svg><span data-i18n="scan.link">Link</span></button>
+              <button type="button" role="tab" class="tab" aria-selected="false" data-kind="message"><svg aria-hidden="true"><use href="/icons.svg#i-msg"/></svg><span data-i18n="scan.message">Message</span></button>
             </div>
             <label class="sr-only" for="scan-input" data-i18n="scan.inputLabel">Link or message to analyze</label>
             <textarea id="scan-input" rows="6" maxlength="4000" placeholder="https://example.com/login" required data-lenis-prevent></textarea>
@@ -213,7 +197,7 @@
               <span class="scan__label"><span data-i18n="scan.try">Try an example</span> <span class="kbd-hint" data-i18n="scan.kbd">or press <kbd>/</kbd> to type</span></span>
               <div class="examples" id="examples"></div>
             </div>
-            <button class="btn btn--ink btn--block" type="submit" id="scan-btn"><svg aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="scan.submit">Analyze</span></button>
+            <button class="btn btn--ink btn--block" type="submit" id="scan-btn"><svg aria-hidden="true"><use href="/icons.svg#i-search"/></svg><span data-i18n="scan.submit">Analyze</span></button>
           </form>
           <div class="detail detail--scan" id="scan-result" aria-live="polite">
             <div class="empty">
@@ -238,19 +222,19 @@
             <div class="pair__side pair__side--real"><span class="pair__tag" data-i18n="look.real">Real</span><code>banconova.com.mx</code></div>
             <div class="pair__side pair__side--fake"><span class="pair__tag" data-i18n="look.fake">Fake</span><code>bancon<span class="diff">0</span>va<span class="diff">-secure-login</span>.<span class="diff">top</span></code></div>
             <p class="pair__note" data-i18n="look.n1">A zero for the “o”, security words bolted on, and a .top ending. The real bank uses banconova.com.mx.</p>
-            <button class="btn btn--line btn--sm pair__go" type="button" data-identify="http://bancon0va-secure-login.top/acceso?id=88213" data-kind="url"><span data-i18n="look.check">Identify this one</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button class="btn btn--line btn--sm pair__go" type="button" data-identify="http://bancon0va-secure-login.top/acceso?id=88213" data-kind="url"><span data-i18n="look.check">Identify this one</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></button>
           </li>
           <li class="pair">
             <div class="pair__side pair__side--real"><span class="pair__tag" data-i18n="look.real">Real</span><code>paypal.com</code></div>
             <div class="pair__side pair__side--fake"><span class="pair__tag" data-i18n="look.fake">Fake</span><code>paypal.com<span class="diff">.account-review.xyz</span></code></div>
             <p class="pair__note" data-i18n="look.n2">It starts with paypal.com, but the real domain is whatever comes last: account-review.xyz.</p>
-            <button class="btn btn--line btn--sm pair__go" type="button" data-identify="https://paypal.com.account-review.xyz/signin" data-kind="url"><span data-i18n="look.check">Identify this one</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button class="btn btn--line btn--sm pair__go" type="button" data-identify="https://paypal.com.account-review.xyz/signin" data-kind="url"><span data-i18n="look.check">Identify this one</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></button>
           </li>
           <li class="pair">
             <div class="pair__side pair__side--real"><span class="pair__tag" data-i18n="look.real">Real</span><code>invoice_8812.pdf</code></div>
             <div class="pair__side pair__side--fake"><span class="pair__tag" data-i18n="look.fake">Fake</span><code>invoice_8812.pdf<span class="diff">.exe</span></code></div>
             <p class="pair__note" data-i18n="look.n3">It looks like a PDF. The .exe at the very end makes it a program that runs.</p>
-            <button class="btn btn--line btn--sm pair__go" type="button" data-identify="Download completed: invoice_8812.pdf.exe (2.1 MB) from a file-sharing link in an email titled &quot;Pago pendiente - urgente&quot;." data-kind="message"><span data-i18n="look.check">Identify this one</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button class="btn btn--line btn--sm pair__go" type="button" data-identify="Download completed: invoice_8812.pdf.exe (2.1 MB) from a file-sharing link in an email titled &quot;Pago pendiente - urgente&quot;." data-kind="message"><span data-i18n="look.check">Identify this one</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></button>
           </li>
         </ol>
       </div>
@@ -269,19 +253,19 @@
             <thead><tr><th scope="col" data-i18n="hab.colArea">Area</th><th scope="col" data-i18n="hab.colLooks">What it looks for</th><th scope="col" data-i18n="hab.colDemo">In this demo</th><th scope="col" data-i18n="hab.colReal">Needed for real protection</th></tr></thead>
             <tbody>
               <tr>
-                <th scope="row"><span class="hab__icon" style="--h: var(--bluebell-fill)"><svg aria-hidden="true"><use href="#i-globe"/></svg></span><span data-i18n="area.browsing">Browsing</span></th>
+                <th scope="row"><span class="hab__icon" style="--h: var(--bluebell-fill)"><svg aria-hidden="true"><use href="/icons.svg#i-globe"/></svg></span><span data-i18n="area.browsing">Browsing</span></th>
                 <td data-i18n="hab.b.looks">Look-alike bank pages, punycode domains, link shorteners, fake downloads, extensions asking for every site</td>
                 <td><span class="tag tag--live" data-i18n="tag.liveScanner">Live scanner</span></td>
                 <td data-i18n="hab.b.real">Browser extension that sees the pages you open</td>
               </tr>
               <tr>
-                <th scope="row"><span class="hab__icon" style="--h: var(--chanterelle-fill)"><svg aria-hidden="true"><use href="#i-device"/></svg></span><span data-i18n="area.device">PC security</span></th>
+                <th scope="row"><span class="hab__icon" style="--h: var(--chanterelle-fill)"><svg aria-hidden="true"><use href="/icons.svg#i-device"/></svg></span><span data-i18n="area.device">PC security</span></th>
                 <td data-i18n="hab.d.looks">Encoded PowerShell, macro documents, ransomware-style mass renames, startup entries, disabled antivirus</td>
                 <td><span class="tag tag--sim" data-i18n="tag.sim">Simulated feed</span></td>
                 <td data-i18n="hab.d.real">Windows agent that reads security logs</td>
               </tr>
               <tr>
-                <th scope="row"><span class="hab__icon" style="--h: var(--amanita-fill)"><svg aria-hidden="true"><use href="#i-accounts"/></svg></span><span data-i18n="area.accounts">Accounts</span></th>
+                <th scope="row"><span class="hab__icon" style="--h: var(--amanita-fill)"><svg aria-hidden="true"><use href="/icons.svg#i-accounts"/></svg></span><span data-i18n="area.accounts">Accounts</span></th>
                 <td data-i18n="hab.a.looks">Sign-ins from new countries, silent forwarding rules, brute-force attempts, apps with full access, threats and extortion</td>
                 <td><span class="tag tag--sim" data-i18n="tag.sim">Simulated feed</span> <span class="tag tag--live" data-i18n="tag.liveMsg">Live for messages</span></td>
                 <td data-i18n="hab.a.real">Read-only account connections you approve (OAuth)</td>
@@ -316,9 +300,11 @@
         <h2 id="cta-title" data-i18n="cta.title">Got a message that worries you?</h2>
         <p data-i18n="cta.body">Paste it into the scanner or ask the assistant. You get a plain answer in seconds.</p>
         <div class="close__cta">
-          <a class="btn btn--ink" href="#scanner" data-focus-scan><svg aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="cta.scan">Check a message</span></a>
-          <button class="btn btn--line" type="button" data-open-chat><svg aria-hidden="true"><use href="#i-msg"/></svg><span data-i18n="cta.ask">Ask the assistant</span></button>
+          <a class="btn btn--ink" href="/app/"><span data-i18n="cta.start">Get started with the beta</span><svg aria-hidden="true"><use href="/icons.svg#i-arrow"/></svg></a>
+          <a class="btn btn--line" href="#scanner" data-focus-scan><svg aria-hidden="true"><use href="/icons.svg#i-search"/></svg><span data-i18n="cta.scan">Check a message</span></a>
+          <button class="btn btn--line" type="button" data-open-chat><svg aria-hidden="true"><use href="/icons.svg#i-msg"/></svg><span data-i18n="cta.ask">Ask the assistant</span></button>
         </div>
+        <p class="close__ver"><span class="beta" data-version>beta · v0.1.0</span><span data-i18n="cta.ver">Checks, a private history on your device, the assistant and first-aid guides.</span></p>
       </div>
     </section>
   </main>
@@ -326,11 +312,12 @@
   <footer class="footer">
     <div class="wrap footer__inner">
       <div>
-      <a class="brand brand--foot" href="#top" aria-label="OPVORA"><span class="brand__tile"><svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg></span><span class="brand__word">OPVORA</span></a>
+      <a class="brand brand--foot" href="#top" aria-label="OPVORA"><span class="brand__tile"><svg class="brand__mark" aria-hidden="true"><use href="/icons.svg#i-logo"/></svg></span><span class="brand__word">OPVORA</span></a>
       <nav class="footer__links" aria-label="Footer">
-        <a href="#console" data-i18n="nav.console">Console</a><a href="#scanner" data-i18n="nav.identify">Identify</a><a href="#lookalikes" data-i18n="nav.lookalikes">Look-alikes</a><a href="#habitats" data-i18n="nav.habitats">Habitats</a><a href="#method" data-i18n="nav.method">Method</a>
+        <a href="/app/" data-i18n="footer.app">Open the app</a><a href="#console" data-i18n="nav.console">Console</a><a href="#scanner" data-i18n="nav.identify">Identify</a><a href="#lookalikes" data-i18n="nav.lookalikes">Look-alikes</a><a href="#habitats" data-i18n="nav.habitats">Habitats</a><a href="#method" data-i18n="nav.method">Method</a><a href="/privacy" data-i18n="footer.privacy">Privacy</a><a href="/terms" data-i18n="footer.terms">Terms</a>
       </nav>
-      <p data-i18n="footer.body">Demo build for a competition. Text you scan or send to the assistant is processed by Cloudflare Workers AI and is not stored by OPVORA. If someone threatens your safety, call 911.</p>
+      <p data-i18n="footer.body">OPVORA public beta. Text you check or send to the assistant is processed by Cloudflare Workers AI and is not stored by OPVORA. The console on this page plays simulated alerts. If someone threatens your safety, call 911.</p>
+      <p class="footer__ver"><span class="beta" data-version>beta · v0.1.0</span></p>
       </div>
       <div class="sos">
         <h2 data-i18n="sos.title">In danger right now? (Mexico)</h2>
@@ -342,13 +329,13 @@
 
   <aside class="chat" id="chat" aria-label="OPVORA assistant" hidden>
     <header class="chat__head">
-      <span class="chat__avatar chat__avatar--lg" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+      <span class="chat__avatar chat__avatar--lg" aria-hidden="true"><svg><use href="/icons.svg#i-logo"/></svg></span>
       <div class="chat__title">
         <h2 data-i18n="chat.title">OPVORA assistant</h2>
         <p class="chat__status"><span class="dot" aria-hidden="true"></span><span data-i18n="chat.status">Online, can see your console</span></p>
       </div>
-      <button class="btn btn--quiet btn--icon" id="chat-clear" type="button" aria-label="Start a new conversation" title="New conversation" data-i18n-attr="aria-label:chat.clear;title:chat.clear"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
-      <button class="btn btn--quiet btn--icon" id="chat-close" type="button" aria-label="Close the assistant" title="Close" data-i18n-attr="aria-label:chat.close;title:chat.close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button class="btn btn--quiet btn--icon" id="chat-clear" type="button" aria-label="Start a new conversation" title="New conversation" data-i18n-attr="aria-label:chat.clear;title:chat.clear"><svg aria-hidden="true"><use href="/icons.svg#i-reset"/></svg></button>
+      <button class="btn btn--quiet btn--icon" id="chat-close" type="button" aria-label="Close the assistant" title="Close" data-i18n-attr="aria-label:chat.close;title:chat.close"><svg aria-hidden="true"><use href="/icons.svg#i-close"/></svg></button>
     </header>
     <div class="chat__log" id="chat-log" aria-live="polite" data-lenis-prevent></div>
     <div class="chat__suggest" id="chat-suggest">
@@ -360,7 +347,7 @@
     <form class="chat__form" id="chat-form">
       <label class="sr-only" for="chat-input" data-i18n="chat.inputLabel">Message the assistant</label>
       <textarea id="chat-input" rows="1" autocomplete="off" maxlength="1500" placeholder="Ask about an alert or a message…" data-i18n-attr="placeholder:chat.placeholder" data-lenis-prevent></textarea>
-      <button class="btn btn--ink btn--icon" id="chat-send" type="submit" aria-label="Send" data-i18n-attr="aria-label:chat.send"><svg aria-hidden="true"><use href="#i-send"/></svg></button>
+      <button class="btn btn--ink btn--icon" id="chat-send" type="submit" aria-label="Send" data-i18n-attr="aria-label:chat.send"><svg aria-hidden="true"><use href="/icons.svg#i-send"/></svg></button>
     </form>
     <p class="chat__hint" data-i18n="chat.hint">Console alerts are simulated. Never share passwords or codes here.</p>
   </aside>
